@@ -1,6 +1,6 @@
 <?php
 
-namespace Cognesy\Polyglot\LLM\Drivers;
+namespace Cognesy\Polyglot\LLM;
 
 use Cognesy\Http\Contracts\CanHandleHttpRequest;
 use Cognesy\Polyglot\LLM\Contracts\CanHandleInference;
@@ -33,6 +33,7 @@ use Cognesy\Polyglot\LLM\Drivers\GeminiOAI\GeminiOAIUsageFormat;
 use Cognesy\Polyglot\LLM\Drivers\Groq\GroqUsageFormat;
 use Cognesy\Polyglot\LLM\Drivers\Minimaxi\MinimaxiBodyFormat;
 use Cognesy\Polyglot\LLM\Drivers\Mistral\MistralBodyFormat;
+use Cognesy\Polyglot\LLM\Drivers\ModularLLMDriver;
 use Cognesy\Polyglot\LLM\Drivers\OpenAI\OpenAIBodyFormat;
 use Cognesy\Polyglot\LLM\Drivers\OpenAI\OpenAIMessageFormat;
 use Cognesy\Polyglot\LLM\Drivers\OpenAI\OpenAIRequestAdapter;
@@ -42,7 +43,6 @@ use Cognesy\Polyglot\LLM\Drivers\OpenAICompatible\OpenAICompatibleBodyFormat;
 use Cognesy\Polyglot\LLM\Drivers\Perplexity\PerplexityBodyFormat;
 use Cognesy\Polyglot\LLM\Drivers\SambaNova\SambaNovaBodyFormat;
 use Cognesy\Polyglot\LLM\Drivers\XAI\XAiMessageFormat;
-use Cognesy\Polyglot\LLM\Enums\LLMProviderType;
 use Cognesy\Utils\Events\EventDispatcher;
 use InvalidArgumentException;
 
@@ -50,45 +50,39 @@ use InvalidArgumentException;
  * Factory class for creating inference driver instances based
  * on the specified configuration and provider type.
  */
-class InferenceDriverFactory
+class ModularDriverFactory
 {
+    private static array $drivers = [];
+
+    public static function registerDriver(string $name, string|callable $driver): void
+    {
+        self::$drivers[$name] = match (true) {
+            is_callable($driver) => $driver,
+            is_string($driver) => fn($config, $httpClient, $events) => new $driver(
+                $config,
+                $httpClient,
+                $events
+            ),
+        };
+    }
+
     /**
      * Creates and returns an appropriate driver instance based on the given configuration.
      *
-     * @param \Cognesy\Polyglot\LLM\Data\LLMConfig $config Configuration object specifying the provider type and other necessary settings.
+     * @param LLMConfig $config Configuration object specifying the provider type and other necessary settings.
      * @param CanHandleHttpRequest $httpClient An HTTP client instance to handle HTTP requests.
      *
-     * @return \Cognesy\Polyglot\LLM\Contracts\CanHandleInference A driver instance matching the specified provider type.
+     * @return CanHandleInference A driver instance matching the specified provider type.
      * @throws InvalidArgumentException If the provider type is not supported.
      */
-    public function make(LLMConfig $config, CanHandleHttpRequest $httpClient, EventDispatcher $events): CanHandleInference {
-        return match ($config->providerType) {
-            // Tailored drivers
-            LLMProviderType::Anthropic->value => $this->anthropic($config, $httpClient, $events),
-            LLMProviderType::Azure->value => $this->azure($config, $httpClient, $events),
-            LLMProviderType::Cerebras->value => $this->cerebras($config, $httpClient, $events),
-            LLMProviderType::CohereV1->value => $this->cohereV1($config, $httpClient, $events),
-            LLMProviderType::CohereV2->value => $this->cohereV2($config, $httpClient, $events),
-            LLMProviderType::DeepSeek->value => $this->deepseek($config, $httpClient, $events),
-            LLMProviderType::Fireworks->value => $this->fireworks($config, $httpClient, $events),
-            LLMProviderType::Gemini->value => $this->gemini($config, $httpClient, $events),
-            LLMProviderType::GeminiOAI->value => $this->geminiOAI($config, $httpClient, $events),
-            LLMProviderType::Groq->value => $this->groq($config, $httpClient, $events),
-            LLMProviderType::Minimaxi->value => $this->minimaxi($config, $httpClient, $events),
-            LLMProviderType::Mistral->value => $this->mistral($config, $httpClient, $events),
-            LLMProviderType::OpenAI->value => $this->openAI($config, $httpClient, $events),
-            LLMProviderType::Perplexity->value => $this->perplexity($config, $httpClient, $events),
-            LLMProviderType::SambaNova->value => $this->sambaNova($config, $httpClient, $events),
-            LLMProviderType::XAi->value => $this->xAi($config, $httpClient, $events),
-            // OpenAI compatible driver for generic OAI providers
-            LLMProviderType::A21->value,
-            LLMProviderType::Moonshot->value,
-            LLMProviderType::Ollama->value,
-            LLMProviderType::OpenAICompatible->value,
-            LLMProviderType::OpenRouter->value,
-            LLMProviderType::Together->value => $this->openAICompatible($config, $httpClient, $events),
-            default => throw new InvalidArgumentException("Client not supported: {$config->providerType}"),
-        };
+    public function makeDriver(LLMConfig $config, CanHandleHttpRequest $httpClient, EventDispatcher $events): CanHandleInference
+    {
+        $type = $config->providerType;
+        $driver = self::$drivers[$type] ?? $this->getBundledDriver($type);
+        if ($driver === null) {
+            throw new InvalidArgumentException("Provider type not supported - missing built-in or custom driver: {$type}");
+        }
+        return $driver($config, $httpClient, $events);
     }
 
     public function anthropic(LLMConfig $config, CanHandleHttpRequest $httpClient, EventDispatcher $events): CanHandleInference {
@@ -310,5 +304,42 @@ class InferenceDriverFactory
             $httpClient,
             $events
         );
+    }
+
+    // INTERNAL ///////////////////////////////////////////////////////////
+
+    /**
+     * Returns factory to create LLM driver instance
+     * @param string $name
+     * @return callable|null
+     */
+    protected function getBundledDriver(string $name): ?callable
+    {
+        $drivers = [
+            'anthropic' => fn($config, $httpClient, $events) => $this->anthropic($config, $httpClient, $events),
+            'azure' => fn($config, $httpClient, $events) => $this->azure($config, $httpClient, $events),
+            'cerebras' => fn($config, $httpClient, $events) => $this->cerebras($config, $httpClient, $events),
+            'cohere1' => fn($config, $httpClient, $events) => $this->cohereV1($config, $httpClient, $events),
+            'cohere2' => fn($config, $httpClient, $events) => $this->cohereV2($config, $httpClient, $events),
+            'deepseek' => fn($config, $httpClient, $events) => $this->deepseek($config, $httpClient, $events),
+            'fireworks' => fn($config, $httpClient, $events) => $this->fireworks($config, $httpClient, $events),
+            'gemini' => fn($config, $httpClient, $events) => $this->gemini($config, $httpClient, $events),
+            'gemini-oai' => fn($config, $httpClient, $events) => $this->geminiOAI($config, $httpClient, $events),
+            'groq' => fn($config, $httpClient, $events) => $this->groq($config, $httpClient, $events),
+            'minimaxi' => fn($config, $httpClient, $events) => $this->minimaxi($config, $httpClient, $events),
+            'mistral' => fn($config, $httpClient, $events) => $this->mistral($config, $httpClient, $events),
+            'openai' => fn($config, $httpClient, $events) => $this->openAI($config, $httpClient, $events),
+            'perplexity' => fn($config, $httpClient, $events) => $this->perplexity($config, $httpClient, $events),
+            'sambanova' => fn($config, $httpClient, $events) => $this->sambaNova($config, $httpClient, $events),
+            'xai' => fn($config, $httpClient, $events) => $this->xAi($config, $httpClient, $events),
+            // OpenAI compatible driver for generic OAI providers
+            'a21' => fn($config, $httpClient, $events) => $this->openAICompatible($config, $httpClient, $events),
+            'moonshot' => fn($config, $httpClient, $events) => $this->openAICompatible($config, $httpClient, $events),
+            'ollama' => fn($config, $httpClient, $events) => $this->openAICompatible($config, $httpClient, $events),
+            'openai-compatible' => fn($config, $httpClient, $events) => $this->openAICompatible($config, $httpClient, $events),
+            'openrouter' => fn($config, $httpClient, $events) => $this->openAICompatible($config, $httpClient, $events),
+            'together' => fn($config, $httpClient, $events) => $this->openAICompatible($config, $httpClient, $events),
+        ];
+        return $drivers[$name] ?? null;
     }
 }
