@@ -10,10 +10,10 @@ Tools mode enables function calling, allowing the model to request specific acti
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
-$inference = new Inference()->withConnection('openai');  // Tools are best supported by OpenAI
+$inference = new Inference()->using('openai');  // Tools are best supported by OpenAI
 
 // Define a tool for weather information
 $weatherTool = [
@@ -66,7 +66,7 @@ $flightTool = [
 $tools = [$weatherTool, $flightTool];
 
 // Make a request that might require tools
-$response = $inference->create(
+$response = $inference->with(
     messages: 'What\'s the weather like in Paris today?',
     tools: $tools,
     toolChoice: 'auto',  // Let the model decide which tool to use
@@ -90,7 +90,7 @@ if ($response->hasToolCalls()) {
             $weatherData = simulateWeatherApi($args['location'], $args['unit'] ?? 'celsius');
 
             // Send the tool result back to the model
-            $withToolResult = $inference->create(
+            $withToolResult = $inference->with(
                 messages: [
                     ['role' => 'user', 'content' => 'What\'s the weather like in Paris today?'],
                     [
@@ -117,7 +117,7 @@ if ($response->hasToolCalls()) {
                         ],
                     ],
                 ]
-            )->toText();
+            )->get();
 
             echo "Final response: $withToolResult\n";
         }
@@ -145,13 +145,13 @@ You can control how tools are used with the `toolChoice` parameter:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
-$inference = new Inference()->withConnection('openai');
+$inference = new Inference()->using('openai');
 
 // Let the model decide whether to use tools
-$autoResponse = $inference->create(
+$autoResponse = $inference->with(
     messages: 'What\'s the weather like in Paris?',
     tools: $tools,
     toolChoice: 'auto',
@@ -159,7 +159,7 @@ $autoResponse = $inference->create(
 )->response();
 
 // Always require the model to use a specific tool
-$requiredToolResponse = $inference->create(
+$requiredToolResponse = $inference->with(
     messages: 'What\'s the weather like in Paris?',
     tools: $tools,
     toolChoice: [
@@ -172,7 +172,7 @@ $requiredToolResponse = $inference->create(
 )->response();
 
 // Prevent tool usage
-$noToolResponse = $inference->create(
+$noToolResponse = $inference->with(
     messages: 'What\'s the weather like in Paris?',
     tools: $tools,
     toolChoice: 'none',
@@ -187,12 +187,12 @@ You can also stream tool calls to provide real-time feedback:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
-$inference = new Inference()->withConnection('openai');
+$inference = new Inference()->using('openai');
 
-$response = $inference->create(
+$response = $inference->with(
     messages: 'What\'s the weather like in Paris today?',
     tools: $tools,
     toolChoice: 'auto',

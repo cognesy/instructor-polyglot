@@ -53,28 +53,26 @@ class InferenceRequest {
 
 
 
-## InferenceResponse
+## PendingInference
 
-The `InferenceResponse` class handles the response from an LLM API:
+The `PendingInference` class handles the response from an LLM API:
 
 ```php
 namespace Cognesy\Polyglot\LLM;
 
-class InferenceResponse {
+use Cognesy\Polyglot\Inference\Data\InferenceRequest;class PendingInference {
     public function __construct(
-        HttpClientResponse $response,
+        InferenceRequest $request,
         CanHandleInference $driver,
-        LLMConfig $config,
-        bool $isStreamed = false,
-        ?EventDispatcher $events = null
+        EventDispatcherInterface $events,
     ) { ... }
 
     // Access methods
     public function isStreamed(): bool { ... }
     public function toText(): string { ... }
-    public function toJson(): array { ... }
+    public function toArray(): array { ... }
     public function stream(): InferenceStream { ... }
-    public function response(): LLMResponse { ... }
+    public function response(): InferenceResponse { ... }
 }
 ```
 
@@ -85,16 +83,15 @@ namespace Cognesy\Polyglot\LLM;
 
 class InferenceStream {
     public function __construct(
-        HttpClientResponse $response,
-        CanHandleInference $driver,
-        LLMConfig $config,
-        ?EventDispatcher $events = null
+        HttpClientResponse        $httpResponse,
+        CanHandleInference        $driver,
+        EventDispatcherInterface  $events,
     ) { ... }
 
     // Stream processing methods
     public function responses(): Generator { ... }
     public function all(): array { ... }
-    public function final(): ?LLMResponse { ... }
+    public function final(): ?InferenceResponse { ... }
     public function onPartialResponse(callable $callback): self { ... }
 }
 ```

@@ -44,10 +44,11 @@ if (!$modelSupportsVision) {
 ```
 
 4. **Fallback Models**: Implement fallbacks to other models when preferred models fail
+
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Http\Exceptions\RequestException;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Http\Exceptions\HttpRequestException;
 
 function withModelFallback(array $models, string $prompt): string {
     $inference = new Inference();
@@ -55,11 +56,11 @@ function withModelFallback(array $models, string $prompt): string {
 
     foreach ($models as $model) {
         try {
-            return $inference->create(
+            return $inference->with(
                 messages: $prompt,
                 model: $model
-            )->toText();
-        } catch (RequestException $e) {
+            )->get();
+        } catch (HttpRequestException $e) {
             $lastException = $e;
             echo "Model '$model' failed: " . $e->getMessage() . "\n";
             echo "Trying next model...\n";

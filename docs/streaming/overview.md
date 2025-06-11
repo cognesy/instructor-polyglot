@@ -25,10 +25,10 @@ Enabling streaming in Polyglot is straightforward - you need to set the `stream`
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
-$response = $inference->create(
+$response = $inference->with(
     messages: 'Write a short story about a space explorer.',
     options: ['stream' => true]  // Enable streaming
 );
@@ -48,10 +48,10 @@ The most common way to process a stream is to iterate through the partial respon
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
-$response = $inference->create(
+$response = $inference->with(
     messages: 'Write a short story about a space explorer.',
     options: ['stream' => true]
 );
@@ -75,7 +75,7 @@ echo "\n";
 
 ### Understanding Partial Responses
 
-Each iteration of the stream yields a `PartialLLMResponse` object with these key properties:
+Each iteration of the stream yields a `PartialInferenceResponse` object with these key properties:
 
 - `contentDelta`: The new content received in this chunk
 - `content`: The accumulated content up to this point
@@ -102,8 +102,8 @@ foreach ($stream as $partialResponse) {
 After processing the stream, you can get the complete response:
 
 ```php
-// Method 1: Using the original response object's toText() method
-$completeText = $response->toText();
+// Method 1: Using the original response object's get() method
+$completeText = $response->vectors();
 
 // Method 2: Getting the final state from the stream
 $finalResponse = $response->stream()->final();

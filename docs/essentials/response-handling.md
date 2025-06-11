@@ -3,26 +3,30 @@ title: Response Handling
 description: 'Learn how to handle responses from Polyglot.'
 ---
 
-Polyglot's `InferenceResponse` class provides methods to access the response in different formats.
+Polyglot's `PendingInference` class represents pending inference execution.
+It provides methods to access the response in different formats, but also
+provides access to streaming responses. It does not execute the request to
+underlying LLM until you actually access the response data.
 
+It is returned by the `Inference` class when you call the `create()` method.
 
 ## Basic Response Handling
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
-$response = $inference->create(
-    messages: 'What is the capital of France?'
-);
+$response = $inference
+    ->withMessages('What is the capital of France?')
+    ->create();
 
 // Get the response as plain text
-$text = $response->toText();
+$text = $response->get();
 echo "Text response: $text\n";
 
 // Get the response as a JSON object (for JSON responses)
-$json = $response->toJson();
+$json = $response->asJsonData();
 echo "JSON response: " . json_encode($json) . "\n";
 
 // Get the full response object
@@ -44,13 +48,13 @@ For streaming responses, use the `stream()` method:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
-$response = $inference->create(
-    messages: 'Write a short story about a robot.',
-    options: ['stream' => true]
-);
+$response = $inference
+    ->withMessages('Write a short story about a robot.')
+    ->withStreaming()
+    ->create();
 
 // Get a generator that yields partial responses
 $stream = $response->stream()->responses();
@@ -67,7 +71,7 @@ foreach ($stream as $partialResponse) {
     }
 }
 
-echo "\n\nComplete response: " . $response->toText();
+echo "\n\nComplete response: " . $response->get();
 ```
 
 
@@ -79,8 +83,8 @@ For models that support function calling or tools:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
 $tools = [
     [
@@ -107,8 +111,8 @@ $tools = [
     ],
 ];
 
-$inference = new Inference()->withConnection('openai');
-$response = $inference->create(
+$inference = new Inference()->using('openai');
+$response = $inference->with(
     messages: 'What is the weather in Paris?',
     tools: $tools,
     toolChoice: 'auto',  // Let the model decide when to use tools
@@ -154,9 +158,9 @@ if ($response->hasToolCalls()) {
             ],
         ];
 
-        $finalResponse = $inference->create(
+        $finalResponse = $inference->with(
             messages: $newMessages
-        )->toText();
+        )->get();
 
         echo "Final response: $finalResponse\n";
     }

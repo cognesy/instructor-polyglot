@@ -13,10 +13,11 @@ Provider rate limits can cause request failures during high traffic periods.
 ## Solutions
 
 1. **Implement Retry Logic**: Add automatic retries with exponential backoff
+
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Http\Exceptions\RequestException;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Http\Exceptions\HttpRequestException;
 
 function withRetry(callable $fn, int $maxRetries = 3): mixed {
     $attempt = 0;
@@ -25,7 +26,7 @@ function withRetry(callable $fn, int $maxRetries = 3): mixed {
     while ($attempt < $maxRetries) {
         try {
             return $fn();
-        } catch (RequestException $e) {
+        } catch (HttpRequestException $e) {
             $lastException = $e;
             $attempt++;
 
@@ -54,13 +55,13 @@ $inference = new Inference();
 
 try {
     $response = withRetry(function() use ($inference) {
-        return $inference->create(
+        return $inference->with(
             messages: 'What is the capital of France?'
-        )->toText();
+        )->get();
     });
 
     echo "Response: $response\n";
-} catch (RequestException $e) {
+} catch (HttpRequestException $e) {
     echo "All retry attempts failed: " . $e->getMessage() . "\n";
 }
 ```
@@ -97,7 +98,7 @@ $inference = new Inference();
 
 for ($i = 0; $i < 10; $i++) {
     $limiter->waitIfNeeded();
-    $response = $inference->create(
+    $response = $inference->with(
         messages: "This is request $i"
     )->toText();
     echo "Response $i: $response\n";
@@ -105,13 +106,14 @@ for ($i = 0; $i < 10; $i++) {
 ```
 
 3. **Request Batching**: Combine multiple requests into batches when possible
+
 ```php
 <?php
 // Instead of making many small requests
 $responses = [];
 foreach ($questions as $question) {
     // This would hit rate limits quickly
-    $responses[] = $inference->create(messages: $question)->toText();
+    $responses[] = $inference->with(messages: $question)->get();
 }
 
 // Better: Use a context-aware batch approach
@@ -120,7 +122,7 @@ foreach ($questions as $i => $question) {
     $batchedQuestions .= ($i + 1) . ". $question\n";
 }
 
-$batchResponse = $inference->create(messages: $batchedQuestions)->toText();
+$batchResponse = $inference->with(messages: $batchedQuestions)->get();
 // Then parse the batch response into individual answers
 ```
 

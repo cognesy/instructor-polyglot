@@ -13,18 +13,16 @@ Polyglot provides a simple way to enable debug mode:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Enable debug mode when creating the inference object
-$inference = new Inference()->withDebug();
-
-// Or enable it on an existing instance
-$inference->withDebug(true);
+$inference = (new Inference())
+    ->withDebugPreset('on');
 
 // Make a request - debug output will show the request and response details
-$response = $inference->create(
+$response = $inference->with(
     messages: 'What is the capital of France?'
-)->toText();
+)->get();
 ```
 
 
@@ -40,7 +38,7 @@ In this example we're using built-in middleware, but you can also create your ow
 <?php
 use Cognesy\Http\Middleware\Debug\DebugMiddleware;
 use Cognesy\Http\HttpClient;
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Create a custom debug middleware with specific options
 $debugMiddleware = new DebugMiddleware([
@@ -60,9 +58,9 @@ $inference = new Inference();
 $inference->withHttpClient($httpClient);
 
 // Make a request
-$response = $inference->create(
+$response = $inference->with(
     messages: 'What is the capital of France?'
-)->toText();
+)->get();
 ```
 
 
@@ -74,10 +72,7 @@ Use event listeners to trace the flow of requests and responses:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Events\InferenceRequested;
-use Cognesy\Polyglot\LLM\Events\LLMResponseReceived;
-use Cognesy\Utils\Events\EventDispatcher;
+use Cognesy\Events\Dispatchers\EventDispatcher;use Cognesy\Polyglot\Inference\Events\InferenceRequested;use Cognesy\Polyglot\Inference\Events\InferenceResponseCreated;use Cognesy\Polyglot\Inference\Inference;
 
 // Create an event dispatcher
 $events = new EventDispatcher();
@@ -87,18 +82,18 @@ $events->listen(InferenceRequested::class, function (InferenceRequested $event) 
     echo "Request sent: " . json_encode($event->request->toArray()) . "\n";
 });
 
-$events->listen(LLMResponseReceived::class, function (LLMResponseReceived $event) {
-    echo "Response received: " . substr($event->llmResponse->content(), 0, 50) . "...\n";
-    echo "Token usage: " . $event->llmResponse->usage()->total() . "\n";
+$events->listen(InferenceResponseCreated::class, function (InferenceResponseCreated $event) {
+    echo "Response received: " . substr($event->inferenceResponse->content(), 0, 50) . "...\n";
+    echo "Token usage: " . $event->inferenceResponse->usage()->total() . "\n";
 });
 
 // Create an inference object with the event dispatcher
 $inference = new Inference(events: $events);
 
 // Make a request
-$response = $inference->create(
+$response = $inference->with(
     messages: 'What is the capital of France?'
-)->toText();
+)->get();
 ```
 
 
@@ -112,10 +107,7 @@ For more persistent debugging, you can log to files:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Events\LLMResponseReceived;
-use Cognesy\Polyglot\LLM\Events\InferenceRequested;
-use Cognesy\Utils\Events\EventDispatcher;
+use Cognesy\Events\Dispatchers\EventDispatcher;use Cognesy\Polyglot\Inference\Events\InferenceRequested;use Cognesy\Polyglot\Inference\Events\InferenceResponseCreated;use Cognesy\Polyglot\Inference\Inference;
 
 // Create a function to log to file
 function logToFile(string $message, string $filename = 'llm_debug.log'): void {
@@ -137,8 +129,8 @@ $events->listen(InferenceRequested::class, function (InferenceRequested $event) 
 });
 
 // Listen for response events
-$events->listen(LLMResponseReceived::class, function (LLMResponseReceived $event) {
-    $response = $event->llmResponse;
+$events->listen(InferenceResponseCreated::class, function (InferenceResponseCreated $event) {
+    $response = $event->inferenceResponse;
     logToFile("RESPONSE: " . json_encode($response->toArray()));
 });
 
@@ -146,7 +138,7 @@ $events->listen(LLMResponseReceived::class, function (LLMResponseReceived $event
 $inference = new Inference(events: $events);
 
 // Make a request
-$response = $inference->create(
+$response = $inference->with(
     messages: 'What is artificial intelligence?'
-)->toText();
+)->get();
 ```

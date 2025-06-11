@@ -9,15 +9,15 @@ JSON mode instructs the model to return responses formatted as valid JSON object
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
 $inference = new Inference();
 
-$response = $inference->create(
+$response = $inference->with(
     messages: 'List the top 3 most populous cities in the world with their populations.',
     mode: OutputMode::Json
-)->toJson();
+)->asJsonData();
 
 // $response is now a PHP array parsed from the JSON
 echo "Top cities:\n";
@@ -32,8 +32,8 @@ For best results, include clear instructions about the expected JSON structure:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
 $inference = new Inference();
 
@@ -53,10 +53,10 @@ Return your answer as a JSON object with the following structure:
 }
 EOT;
 
-$response = $inference->create(
+$response = $inference->with(
     messages: $prompt,
     mode: OutputMode::Json
-)->toJson();
+)->asJsonData();
 
 // Process the response
 echo "Top cities by population:\n";
@@ -71,20 +71,20 @@ Some providers offer additional options for JSON mode:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
 // OpenAI example
-$inference = new Inference()->withConnection('openai');
+$inference = new Inference()->using('openai');
 
-$response = $inference->create(
+$response = $inference->with(
     messages: 'List the top 3 most populous cities in the world.',
     mode: OutputMode::Json,
     options: [
         'response_format' => ['type' => 'json_object'],
         // Other OpenAI-specific options...
     ]
-)->toJson();
+)->asJsonData();
 
 // The response will be a JSON object
 ```

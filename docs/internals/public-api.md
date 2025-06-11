@@ -22,11 +22,11 @@ class Inference {
     ) { ... }
 
     // Configure the instance
-    public function withConnection(string $connection): self { ... }
+    public function using(string $preset): self { ... }
     public function withConfig(LLMConfig $config): self { ... }
     public function withHttpClient(CanHandleHttpRequest $httpClient): self { ... }
     public function withDriver(CanHandleInference $driver): self { ... }
-    public function withDebug(bool $debug = true): self { ... }
+    public function withDebugPreset(?string $preset): self { ... }
     public function withCachedContext(...): self { ... }
 
     // Main method for creating inference requests
@@ -38,7 +38,7 @@ class Inference {
         array $responseFormat = [],
         array $options = [],
         Mode $mode = OutputMode::Text
-    ): InferenceResponse { ... }
+    ): PendingInference { ... }
 
     // Static convenience method for simple text generation
     public static function text(
@@ -62,7 +62,7 @@ Similarly, the `Embeddings` class provides a unified interface for generating em
 ```php
 namespace Cognesy\Polyglot\Embeddings;
 
-class Embeddings {
+use Cognesy\Polyglot\Embeddings\Data\EmbeddingsResponse;class Embeddings {
     public function __construct(
         string $connection = '',
         ?EmbeddingsConfig $config = null,
@@ -72,7 +72,7 @@ class Embeddings {
     ) { ... }
 
     // Configuration methods
-    public function withConnection(string $connection): self { ... }
+    public function using(string $preset): self { ... }
     public function withConfig(EmbeddingsConfig $config): self { ... }
     public function withModel(string $model): self { ... }
     public function withHttpClient(CanHandleHttpRequest $httpClient): self { ... }

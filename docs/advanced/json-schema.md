@@ -11,8 +11,8 @@ Here's a simple example of how to use JsonSchema with Polyglot's Inference API:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 use Cognesy\Utils\JsonSchema\JsonSchema;
 
 // Define your schema
@@ -27,8 +27,8 @@ $schema = JsonSchema::object(
 
 // Use the schema with Inference
 $data = (new Inference)
-    ->withConnection('openai')
-    ->create(
+    ->using('openai')
+    ->with(
         messages: [
             ['role' => 'user', 'content' => 'What is capital of France? Respond with JSON data.']
         ],
@@ -44,7 +44,7 @@ $data = (new Inference)
         options: ['max_tokens' => 64],
         mode: OutputMode::JsonSchema,
     )
-    ->toJson();
+    ->asJsonData();
 ```
 
 ## Why Use JsonSchema?
@@ -353,8 +353,8 @@ $userSchema = JsonSchema::object(
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 use Cognesy\Utils\JsonSchema\JsonSchema;
 
 // Define address schema
@@ -412,8 +412,8 @@ $userSchema = JsonSchema::object(
 
 // Use the schema with Inference
 $userData = (new Inference)
-    ->withConnection('openai')
-    ->create(
+    ->using('openai')
+    ->with(
         messages: [
             ['role' => 'user', 'content' => 'Generate a profile for John Doe who lives in New York.']
         ],
@@ -428,7 +428,7 @@ $userData = (new Inference)
         ],
         mode: OutputMode::JsonSchema,
     )
-    ->toJson();
+    ->asJsonData();
 
 print_r($userData);
 ```
@@ -439,7 +439,7 @@ JsonSchema can be used to define function/tool parameters for LLMs:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 use Cognesy\Utils\JsonSchema\JsonSchema;
 
 // Define the schema for the function parameters
@@ -465,12 +465,13 @@ $functionDefinition = $weatherParamsSchema->toFunctionCall(
 
 // Use with Polyglot's Inference API
 $result = (new Inference)
-    ->withConnection('openai')
-    ->create(
+    ->using('openai')
+    ->with(
         messages: [
             ['role' => 'user', 'content' => 'What\'s the weather like in Tokyo?']
         ],
         tools: [$functionDefinition],
         // Additional configuration...
-    );
+    )
+    ->create();
 ```

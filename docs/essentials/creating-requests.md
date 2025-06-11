@@ -8,20 +8,21 @@ This section covers how to create requests to LLM providers using the Polyglot l
 
 ## Creating Requests
 
-The `create()` method is the main way to send requests to LLM providers. It accepts several parameters:
+The `with()` method is the main way to set the parameters of the requests to LLM providers.
+
+It accepts several parameters:
 
 ```php
-public function create(
+public function with(
     string|array $messages = [],    // The messages to send to the LLM
     string $model = '',             // The model to use (overrides default)
     array $tools = [],              // Tools/functions for the model to use
     string|array $toolChoice = [],  // Tool selection preference
     array $responseFormat = [],     // Response format specification
     array $options = [],            // Additional request options
-    Mode $mode = OutputMode::Text         // Output mode (Text, JSON, etc.)
-): InferenceResponse
+    Mode $mode = OutputMode::Text   // Output mode (Text, JSON, etc.)
+) : self
 ```
-
 
 
 ## Basic Request Example
@@ -30,12 +31,15 @@ Here's a simple example of creating a request:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
-$response = $inference->create(
-    messages: 'What is the capital of France?'
-)->toText();
+$response = $inference
+    ->with(
+        messages: 'What is the capital of France?'
+    )
+    ->create() // create pending inference
+    ->get();   // get the data - here it executes the request
 
 echo "Response: $response";
 ```
@@ -47,17 +51,17 @@ For chat-based interactions, you can pass an array of messages:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
-$response = $inference->create(
-    messages: [
+$response = $inference
+    ->withMessages([
         ['role' => 'system', 'content' => 'You are a helpful assistant who provides concise answers.'],
         ['role' => 'user', 'content' => 'What is the capital of France?'],
         ['role' => 'assistant', 'content' => 'Paris.'],
         ['role' => 'user', 'content' => 'And what about Germany?']
-    ]
-)->toText();
+    ])
+    ->get();
 
 echo "Response: $response";
 ```
@@ -75,7 +79,7 @@ Example with image (for providers that support it):
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $imageData = base64_encode(file_get_contents('image.jpg'));
 $messages = [
@@ -84,7 +88,7 @@ $messages = [
         'content' => [
             [
                 'type' => 'text',
-                'text' => 'What's in this image?'
+                'text' => 'What\'s in this image?'
             ],
             [
                 'type' => 'image_url',
@@ -96,6 +100,9 @@ $messages = [
     ]
 ];
 
-$inference = new Inference()->withConnection('openai');
-$response = $inference->create(messages: $messages)->toText();
+$response = new Inference()
+    ->using('openai')
+    ->withModel('gpt-4o'); // use multimodal model
+    ->with(messages: $messages)
+    ->toText();
 ```

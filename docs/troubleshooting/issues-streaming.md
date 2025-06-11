@@ -14,10 +14,10 @@ Streaming responses can encounter specific problems.
 ## Solutions
 
 1. **Connection Timeouts**: Increase timeout settings for streaming responses
+
 ```php
 <?php
-use Cognesy\Http\HttpClient;
-use Cognesy\Http\Data\HttpClientConfig;
+use Cognesy\Http\Config\HttpClientConfig;use Cognesy\Http\HttpClient;
 
 // Create a custom HTTP client with longer timeouts
 $config = new HttpClientConfig(
@@ -31,7 +31,7 @@ $inference = new Inference();
 $inference->withHttpClient($httpClient);
 
 // Use streaming with the custom client
-$response = $inference->create(
+$response = $inference->with(
     messages: 'Write a long story about a space explorer.',
     options: ['stream' => true]
 );
@@ -60,7 +60,7 @@ foreach ($stream as $partial) {
 ```php
 <?php
 try {
-    $response = $inference->create(
+    $response = $inference->with(
         messages: 'Write a long story.',
         options: ['stream' => true]
     );
@@ -96,7 +96,7 @@ function getResponse(string $prompt, bool $preferStreaming = true): string {
     try {
         if ($preferStreaming) {
             // Try streaming first
-            $response = $inference->create(
+            $response = $inference->with(
                 messages: $prompt,
                 options: ['stream' => true]
             );
@@ -114,6 +114,6 @@ function getResponse(string $prompt, bool $preferStreaming = true): string {
     }
 
     // Fallback to non-streaming
-    return $inference->create(messages: $prompt)->toText();
+    return $inference->with(messages: $prompt)->toText();
 }
 ```

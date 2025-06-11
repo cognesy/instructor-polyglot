@@ -11,6 +11,7 @@ description: How to troubleshoot provider configurations in Polyglot
 - Incorrect API keys or permissions
 - Missing or incorrect configuration parameters
 
+
 ## Solutions
 
 ### 1. Verify API Keys
@@ -19,31 +20,33 @@ Make sure your API keys are correct and have the necessary permissions:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Http\Exceptions\RequestException;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Http\Exceptions\HttpRequestException;
 
-function testApiKey(string $connection): bool {
+function testApiKey(string $preset): bool {
     try {
-        $inference = new Inference($connection);
-        $response = $inference->create(
+        $llm = LLMProvider::using($preset);
+        $inference = new Inference($preset);
+        $response = $inference->with(
             messages: 'Test message',
             options: ['max_tokens' => 5]
-        )->toText();
+        )->get();
 
-        echo "Connection '$connection' is working.\n";
+        echo "Connection preset '$preset' is working.\n";
         return true;
-    } catch (RequestException $e) {
-        echo "Error with connection '$connection': " . $e->getMessage() . "\n";
+    } catch (HttpRequestException $e) {
+        echo "Error with connection '$preset': " . $e->getMessage() . "\n";
         return false;
     }
 }
 
 // Test each connection
-$connections = ['openai', 'anthropic', 'mistral'];
-foreach ($connections as $connection) {
-    testApiKey($connection);
+$presets = ['openai', 'anthropic', 'mistral'];
+foreach ($presets as $preset) {
+    testApiKey($preset);
 }
 ```
+
 
 ### 2. Enable Debug Mode
 
@@ -51,21 +54,26 @@ Use debug mode to see the actual requests and responses:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Enable debug mode
-$inference = new Inference('openai');
-$inference->withDebug(true);
+$inference = new Inference()
+    ->using('openai')
+    ->withDebugPreset('on');
 
 // Make a request
-$response = $inference->create(
+$response = $inference->with(
     messages: 'Test message with debug enabled'
-)->toText();
+)->get();
 ```
+
+
 
 ### 3. Check Provider Status
 
 Some issues might be related to the provider's service status. Check their status pages or documentation.
+
+
 
 ### 4. Verify Configuration Parameters
 
@@ -73,13 +81,13 @@ Ensure all required configuration parameters are present and correctly formatted
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Data\LLMConfig;
 
-function verifyConfig(string $connection): void {
+function verifyConfig(string $preset): void {
     try {
-        $config = LLMConfig::load($connection);
+        $provider = new ConfigProvider();
+        $config = LLMConfig::fromArray($provider->getConfig($preset));
 
-        echo "Configuration for '$connection':\n";
+        echo "Configuration for '$preset':\n";
         echo "API URL: {$config->apiUrl}\n";
         echo "Endpoint: {$config->endpoint}\n";
         echo "Default Model: {$config->model}\n";
@@ -94,14 +102,14 @@ function verifyConfig(string $connection): void {
             echo "Warning: Default model is not set\n";
         }
     } catch (\Exception $e) {
-        echo "Error loading configuration for '$connection': " . $e->getMessage() . "\n";
+        echo "Error loading configuration for '$preset': " . $e->getMessage() . "\n";
     }
 }
 
 // Verify configurations
-$connections = ['openai', 'anthropic', 'mistral'];
-foreach ($connections as $connection) {
-    verifyConfig($connection);
+$presets = ['openai', 'anthropic', 'mistral'];
+foreach ($presets as $preset) {
+    verifyConfig($preset);
     echo "\n";
 }
 ```

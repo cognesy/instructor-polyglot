@@ -10,10 +10,10 @@ JSON Schema mode takes JSON generation a step further by validating the response
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
-$inference = new Inference()->withConnection('openai');  // Currently best supported by OpenAI
+$inference = new Inference()->using('openai');  // Currently best supported by OpenAI
 
 // Define a schema for a weather report
 $schema = [
@@ -62,7 +62,7 @@ $schema = [
 ];
 
 // Request a weather report
-$response = $inference->create(
+$response = $inference->with(
     messages: 'Provide a weather report for Paris, France.',
     responseFormat: [
         'type' => 'json_schema',
@@ -73,7 +73,7 @@ $response = $inference->create(
         ],
     ],
     mode: OutputMode::JsonSchema
-)->toJson();
+)->asJsonData();
 
 // The response will match the schema's structure exactly
 echo "Weather in {$response['location']}:\n";

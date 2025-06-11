@@ -10,16 +10,18 @@ Text mode is the default and simplest output format, returning unstructured text
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
 $inference = new Inference();
 
 // OutputMode::Text is the default, so you don't need to specify it
-$response = $inference->create(
-    messages: 'What is the capital of France?',
-    mode: OutputMode::Text  // Optional, this is the default
-)->toText();
+$response = $inference
+    ->with(
+        messages: 'What is the capital of France?',
+        mode: OutputMode::Text  // Optional, this is the default
+    )
+    ->get();
 
 echo "Response: $response\n";
 // Output: Response: The capital of France is Paris.
@@ -40,23 +42,23 @@ Text mode works consistently across all providers, making it the most portable o
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
 
 // Using OpenAI
-$openAIResponse = $inference->withConnection('openai')
-    ->create(
-        messages: 'Write a short poem about the ocean.'
-    )->toText();
+$openAIResponse = $inference
+    ->using('openai')
+    ->withMessages('Write a short poem about the ocean.')
+    ->get();
 
 echo "OpenAI response:\n$openAIResponse\n\n";
 
 // Using Anthropic
-$anthropicResponse = $inference->withConnection('anthropic')
-    ->create(
-        messages: 'Write a short poem about the ocean.'
-    )->toText();
+$anthropicResponse = $inference
+    ->using('anthropic')
+    ->with('Write a short poem about the ocean.')
+    ->get();
 
 echo "Anthropic response:\n$anthropicResponse\n\n";
 

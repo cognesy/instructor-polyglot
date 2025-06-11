@@ -9,10 +9,10 @@ You can use the `onPartialResponse` method to register a callback that is called
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
-$response = $inference->create(
+$response = $inference->with(
     messages: 'Write a short story about a space explorer.',
     options: ['stream' => true]
 );
@@ -37,10 +37,10 @@ You can process and transform the content as it streams:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
-$response = $inference->create(
+$response = $inference->with(
     messages: 'Generate a list of 10 book titles.',
     options: ['stream' => true]
 );
@@ -70,11 +70,11 @@ For streaming JSON responses, you need to accumulate content until you have vali
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
-use Cognesy\Polyglot\LLM\Enums\OutputMode;
+use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
 $inference = new Inference();
-$response = $inference->create(
+$response = $inference->with(
     messages: 'List 5 countries and their capitals in JSON format.',
     mode: OutputMode::Json,  // Request JSON response
     options: ['stream' => true]
@@ -123,10 +123,10 @@ In some cases, you may want to stop the generation early:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
-$response = $inference->create(
+$response = $inference->with(
     messages: 'Write a long story about space exploration.',
     options: ['stream' => true]
 );
@@ -169,10 +169,10 @@ Here's an example of memory-efficient processing for very long responses:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference();
-$response = $inference->create(
+$response = $inference->with(
     messages: 'Generate a very long story.',
     options: [
         'stream' => true,

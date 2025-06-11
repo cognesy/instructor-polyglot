@@ -12,10 +12,10 @@ Polyglot supports context caching through the `withCachedContext()` method:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Create an inference object
-$inference = new Inference()->withConnection('anthropic');
+$inference = new Inference()->using('anthropic');
 
 // Set up a conversation with cached context
 $inference->withCachedContext(
@@ -27,7 +27,7 @@ $inference->withCachedContext(
 );
 
 // First query using the cached context
-$response1 = $inference->create(
+$response1 = $inference->with(
     messages: 'What is supervised learning?'
 )->response();
 
@@ -35,7 +35,7 @@ echo "Response 1: " . $response1->content() . "\n";
 echo "Tokens from cache: " . $response1->usage()->cacheReadTokens . "\n\n";
 
 // Second query, still using the same cached context
-$response2 = $inference->create(
+$response2 = $inference->with(
     messages: 'And what about unsupervised learning?'
 )->response();
 
@@ -59,13 +59,13 @@ Context caching is particularly valuable when working with large documents:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Load a large document
 $documentContent = file_get_contents('large_document.txt');
 
 // Set up cached context with the document
-$inference = new Inference()->withConnection('anthropic');
+$inference = new Inference()->using('anthropic');
 $inference->withCachedContext(
     messages: [
         ['role' => 'system', 'content' => 'You will help analyze and summarize documents.'],
@@ -83,7 +83,7 @@ $questions = [
 ];
 
 foreach ($questions as $index => $question) {
-    $response = $inference->create(messages: $question)->response();
+    $response = $inference->with(messages: $question)->response();
 
     echo "Question " . ($index + 1) . ": $question\n";
     echo "Answer: " . $response->content() . "\n";

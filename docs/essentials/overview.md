@@ -18,10 +18,10 @@ Simplified inference API uses the default connection for convenient ad-hoc calls
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Generate text using the default connection
-$answer = Inference::text('What is the capital of France?');
+$answer = (new Inference)->with(messages: 'What is the capital of France?')->get();
 
 echo "Answer: $answer";
 
@@ -38,15 +38,15 @@ For more control, you can create an instance of the `Inference` class:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Create an inference object
 $inference = new Inference();
 
 // Generate text using the default connection
-$answer = $inference->create(
+$answer = $inference->with(
     messages: [['role' => 'user', 'content' => 'What is the capital of France?']]
-)->toText();
+)->get();
 
 echo "Answer: $answer";
 ```
@@ -54,18 +54,18 @@ echo "Answer: $answer";
 
 ## Specifying a Connection
 
-You can specify which connection to use:
+You can specify which connection preset to use:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Create an inference object with a specific connection
 $inference = new Inference();
-$answer = $inference->withConnection('anthropic')
-    ->create(
+$answer = $inference->using('anthropic')
+    ->with(
         messages: [['role' => 'user', 'content' => 'What is the capital of France?']]
-    )->toText();
+    )->get();
 
 echo "Answer (using Anthropic): $answer";
 ```
@@ -77,7 +77,7 @@ For multi-turn conversations, provide an array of messages:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Create a chat conversation
 $messages = [
@@ -87,9 +87,9 @@ $messages = [
 ];
 
 $inference = new Inference();
-$answer = $inference->create(
+$answer = $inference->with(
     messages: $messages
-)->toText();
+)->get();
 
 echo "Answer: $answer";
 ```
@@ -101,18 +101,18 @@ You can customize various parameters for your requests:
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Create an inference with custom options
 $inference = new Inference();
-$answer = $inference->create(
+$answer = $inference->with(
     messages: [['role' => 'user', 'content' => 'Write a short poem about coding.']],
     model: 'gpt-4', // Override the default model
     options: [
         'temperature' => 0.7,
         'max_tokens' => 100,
     ]
-)->toText();
+)->get();
 
 echo "Poem: $answer";
 ```
@@ -130,15 +130,14 @@ The `toText()` method returns text completion from the LLM response.
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $answer = (new Inference)
-    ->withConnection('openai') // optional, default is set in /config/llm.php
-    ->create(
-        messages: [['role' => 'user', 'content' => 'What is capital of France']],
-        options: ['max_tokens' => 64]
-    )
-    ->toText();
+    ->using('openai') // optional, default is set in /config/llm.php
+    ->withMessages([['role' => 'user', 'content' => 'What is capital of France']])
+    ->withOptions(['max_tokens' => 64])
+    ->with()
+    ->get();
 
 echo "USER: What is capital of France\n";
 echo "ASSISTANT: $answer\n";
@@ -153,13 +152,12 @@ the whole response is ready.
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $stream = (new Inference)
-    ->create(
-        messages: [['role' => 'user', 'content' => 'Describe capital of Brasil']],
-        options: ['max_tokens' => 128, 'stream' => true]
-    )
+    ->withMessages([['role' => 'user', 'content' => 'Describe capital of Brasil']])
+    ->withOptions(['max_tokens' => 512])
+    ->withStreaming()
     ->stream()
     ->responses();
 
@@ -187,9 +185,9 @@ the client connection.
 
 ```php
     // This is fragment of /config/llm.php file
-    'defaultConnection' => 'openai',
+    'defaultPreset' => 'openai',
     //...
-    'connections' => [
+    'presets' => [
         'anthropic' => [ ... ],
         'azure' => [ ... ],
         'cohere1' => [ ... ],
@@ -216,15 +214,15 @@ the client connection.
 To customize the available connections you can either modify existing entries or
 add your own.
 
-Connecting to LLM API via predefined connection is as simple as calling `withClient`
-method with the connection name.
+Connecting to LLM API via predefined connection is as simple as calling `withPreset`
+method with the connection preset name.
 
 ```php
 <?php
 // ...
 $answer = (new Inference)
-    ->withConnection('ollama') // see /config/llm.php
-    ->create(
+    ->using('ollama') // see /config/llm.php
+    ->with(
         messages: [['role' => 'user', 'content' => 'What is the capital of France']],
         options: ['max_tokens' => 64]
     )
@@ -246,31 +244,31 @@ Polyglot makes it easy to switch between different LLM providers at runtime.
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Create an inference object
 $inference = new Inference();
 
 // Use the default provider (set in config)
-$defaultResponse = $inference->create(
+$defaultResponse = $inference->with(
     messages: 'What is the capital of France?'
-)->toText();
+)->get();
 
 echo "Default provider response: $defaultResponse\n\n";
 
 // Switch to Anthropic
-$anthropicResponse = $inference->withConnection('anthropic')
-    ->create(
+$anthropicResponse = $inference->using('anthropic')
+    ->with(
         messages: 'What is the capital of Germany?'
-    )->toText();
+    )->get();
 
 echo "Anthropic response: $anthropicResponse\n\n";
 
 // Switch to Mistral
-$mistralResponse = $inference->withConnection('mistral')
-    ->create(
+$mistralResponse = $inference->using('mistral')
+    ->with(
         messages: 'What is the capital of Italy?'
-    )->toText();
+    )->get();
 
 echo "Mistral response: $mistralResponse\n\n";
 
@@ -281,9 +279,9 @@ $mistral = new Inference('mistral');
 
 // And use them independently
 $responses = [
-    'openai' => $openAI->create(messages: 'What is the capital of Spain?')->toText(),
-    'anthropic' => $anthropic->create(messages: 'What is the capital of Portugal?')->toText(),
-    'mistral' => $mistral->create(messages: 'What is the capital of Greece?')->toText(),
+    'openai' => $openAI->with(messages: 'What is the capital of Spain?')->get(),
+    'anthropic' => $anthropic->with(messages: 'What is the capital of Portugal?')->get(),
+    'mistral' => $mistral->with(messages: 'What is the capital of Greece?')->get(),
 ];
 
 foreach ($responses as $provider => $response) {
@@ -300,28 +298,28 @@ Each provider offers multiple models with different capabilities, context length
 
 ```php
 <?php
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 $inference = new Inference('openai');
 
 // Use the default model (set in config)
-$defaultModelResponse = $inference->create(
+$defaultModelResponse = $inference->with(
     messages: 'What is machine learning?'
-)->toText();
+)->get();
 
 // Use a specific model
-$specificModelResponse = $inference->create(
+$specificModelResponse = $inference->with(
     messages: 'What is machine learning?',
     model: 'gpt-4o'  // Override the default model
-)->toText();
+)->get();
 
 // You can also set the model and other options
-$customResponse = $inference->create(
+$customResponse = $inference->with(
     messages: 'What is machine learning?',
     model: 'gpt-4-turbo',
     options: [
         'temperature' => 0.7,
         'max_tokens' => 500,
     ]
-)->toText();
+)->get();
 ```

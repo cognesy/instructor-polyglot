@@ -80,12 +80,12 @@ The `llm.php` configuration file contains settings for LLM providers:
 <?php
 // Example of a simplified config/llm.php
 
-use Cognesy\Utils\Env;
+use Cognesy\Config\Env;
 
 return [
-    'defaultConnection' => 'openai',  // Default connection to use
+    'defaultPreset' => 'openai',  // Default connection to use
 
-    'connections' => [
+    'presets' => [
         'openai' => [
             'providerType' => 'openai',
             'apiUrl' => 'https://api.openai.com/v1',
@@ -120,12 +120,12 @@ The `embed.php` configuration file contains settings for embeddings providers:
 <?php
 // Example of a simplified config/embed.php
 
-use Cognesy\Utils\Env;
+use Cognesy\Config\Env;
 
 return [
-    'defaultConnection' => 'openai',
+    'defaultPreset' => 'openai',
 
-    'connections' => [
+    'presets' => [
         'openai' => [
             'providerType' => 'openai',
             'apiUrl' => 'https://api.openai.com/v1',
@@ -152,7 +152,7 @@ INSTRUCTOR_CONFIG_PATH=/path/to/your/config
 You can use `Settings` class static `setPath()` method to override the value of config path set in environment variable with your own value.
 
 ```php
-use Cognesy\Utils\Settings;
+use Cognesy\Config\Settings;
 
 Settings::setPath('/your/path/to/config');
 ```
@@ -174,10 +174,10 @@ A simple way to test if everything is working correctly is to run a small script
 <?php
 require 'vendor/autoload.php';
 
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 try {
-    $result = Inference::text('Say hello.');
+    $result = (new Inference)->with(messages: 'Say hello.')->get();
     echo "Successfully received response: $result\n";
     echo "Polyglot is working correctly!\n";
 } catch (\Exception $e) {

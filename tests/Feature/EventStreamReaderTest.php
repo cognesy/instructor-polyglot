@@ -1,9 +1,9 @@
 <?php
 
-use Cognesy\Polyglot\LLM\Events\StreamDataParsed;
-use Cognesy\Polyglot\LLM\Events\StreamDataReceived;
-use Cognesy\Polyglot\LLM\EventStreamReader;
-use Cognesy\Utils\Events\EventDispatcher;
+use Cognesy\Events\Dispatchers\EventDispatcher;
+use Cognesy\Polyglot\Inference\Events\StreamEventParsed;
+use Cognesy\Polyglot\Inference\Events\StreamEventReceived;
+use Cognesy\Polyglot\Inference\Utils\EventStreamReader;
 use Mockery as Mock;
 
 beforeEach(function () {
@@ -12,10 +12,10 @@ beforeEach(function () {
 });
 
 it('streams synthetic OpenAI streaming data correctly without parser', function () {
-    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamDataReceived::class));
-    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamDataParsed::class));
+    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamEventReceived::class));
+    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamEventParsed::class));
 
-    $reader = new EventStreamReader(events: $this->mockEventDispatcher);
+    $reader = new EventStreamReader(parser: null, events: $this->mockEventDispatcher);
 
     $generator = function () {
         yield '{"id": "cmpl-xyz", "object": "text_completion", "choices": [{"text": "Hello, ", "index": 0}]}'. "\n";
@@ -32,8 +32,8 @@ it('streams synthetic OpenAI streaming data correctly without parser', function 
 });
 
 it('processes synthetic OpenAI streaming data with a custom parser', function () {
-    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamDataReceived::class));
-    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamDataParsed::class));
+    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamEventReceived::class));
+    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamEventParsed::class));
 
     $parser = fn($line) => substr($line, 6);
     $reader = new EventStreamReader(parser: $parser, events: $this->mockEventDispatcher);
@@ -53,8 +53,8 @@ it('processes synthetic OpenAI streaming data with a custom parser', function ()
 });
 
 it('dispatches events when streaming synthetic OpenAI data', function () {
-    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamDataReceived::class));
-    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamDataParsed::class));
+    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamEventReceived::class));
+    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamEventParsed::class));
 
     $reader = new EventStreamReader(events: $this->mockEventDispatcher);
 
@@ -70,8 +70,8 @@ it('dispatches events when streaming synthetic OpenAI data', function () {
 });
 
 it('skips empty lines correctly in synthetic OpenAI data', function () {
-    $this->mockEventDispatcher->shouldReceive('dispatch')->times(5)->with(Mock::type(StreamDataReceived::class));
-    $this->mockEventDispatcher->shouldReceive('dispatch')->twice()->with(Mock::type(StreamDataParsed::class));
+    $this->mockEventDispatcher->shouldReceive('dispatch')->times(5)->with(Mock::type(StreamEventReceived::class));
+    $this->mockEventDispatcher->shouldReceive('dispatch')->twice()->with(Mock::type(StreamEventParsed::class));
 
     $reader = new EventStreamReader(events: $this->mockEventDispatcher);
 
@@ -95,8 +95,8 @@ it('skips empty lines correctly in synthetic OpenAI data', function () {
 });
 
 it('handles incomplete lines correctly in synthetic OpenAI data', function () {
-    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamDataReceived::class));
-    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamDataParsed::class));
+    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamEventReceived::class));
+    $this->mockEventDispatcher->shouldReceive('dispatch')->times(2)->with(Mock::type(StreamEventParsed::class));
 
     $reader = new EventStreamReader(events: $this->mockEventDispatcher);
 

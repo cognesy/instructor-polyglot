@@ -33,14 +33,14 @@ In your project directory, create a new PHP file `test-polyglot.php`:
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-use Cognesy\Polyglot\LLM\Inference;
+use Cognesy\Polyglot\Inference\Inference;
 
 // Set up OpenAI API key
 $apiKey = 'your-openai-api-key';
 putenv("OPENAI_API_KEY=" . $apiKey);
 // WARNING: In real project you should set up API key in .env file.
 
-$answer = Inference::text('What is capital of Germany');
+$answer = (new Inference)->with('What is capital of Germany')->get();
 
 echo "USER: What is capital of Germany\n";
 echo "ASSISTANT: $answer\n";

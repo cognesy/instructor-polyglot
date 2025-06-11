@@ -59,7 +59,7 @@ use Cognesy\Polyglot\Embeddings\Embeddings;
 
 // Generate embeddings for a document
 $embeddings = new Embeddings();
-$result = $embeddings->create('The quick brown fox jumps over the lazy dog.');
+$result = $embeddings->with('The quick brown fox jumps over the lazy dog.')->get();
 
 // Get the vector values from the first (and only) result
 $vector = $result->first()->values();
@@ -82,9 +82,9 @@ use Cognesy\Polyglot\Embeddings\Embeddings;
 $docs = ['Computer vision models are used to analyze images and videos.'];
 
 $embedding = (new Embeddings)
-    ->withConnection('openai')
-    ->create(input: $docs)
-    ->all();
+    ->using('openai')
+    ->with(input: $docs)
+    ->vectors();
 ?>
 ```
 
@@ -98,11 +98,11 @@ use Cognesy\Polyglot\Embeddings\Embeddings;
 $embeddings = new Embeddings('openai');
 
 // Use the default model
-$defaultVector = $embeddings->create("Sample text")->first()->values();
+$defaultVector = $embeddings->with("Sample text")->first()->values();
 
 // Use a specific model
 $largeVector = $embeddings->withModel('text-embedding-3-large')
-    ->create("Sample text")
+    ->with("Sample text")
     ->first()
     ->values();
 
@@ -117,8 +117,7 @@ You can create a custom configuration for your embeddings provider, allowing you
 
 ```php
 <?php
-use Cognesy\Polyglot\Embeddings\Embeddings;
-use Cognesy\Polyglot\Embeddings\Data\EmbeddingsConfig;
+use Cognesy\Polyglot\Embeddings\Config\EmbeddingsConfig;use Cognesy\Polyglot\Embeddings\Embeddings;
 
 // Create a custom embeddings configuration
 $embeddingsConfig = new EmbeddingsConfig(
@@ -128,14 +127,14 @@ $embeddingsConfig = new EmbeddingsConfig(
     model: 'text-embedding-3-large',
     dimensions: 3072,
     maxInputs: 100,
-    providerType: 'openai'
+    driver: 'openai'
 );
 
 // Use the custom configuration
 $embeddings = new Embeddings();
 $embeddings->withConfig($embeddingsConfig);
 
-$vector = $embeddings->create('Custom configuration example')
+$vector = $embeddings->with('Custom configuration example')
     ->first()
     ->values();
 
