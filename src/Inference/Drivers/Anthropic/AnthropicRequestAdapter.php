@@ -2,21 +2,21 @@
 
 namespace Cognesy\Polyglot\Inference\Drivers\Anthropic;
 
-use Cognesy\Http\Data\HttpClientRequest;
+use Cognesy\Http\Data\HttpRequest;
 use Cognesy\Polyglot\Inference\Config\LLMConfig;
 use Cognesy\Polyglot\Inference\Contracts\CanMapRequestBody;
-use Cognesy\Polyglot\Inference\Contracts\ProviderRequestAdapter;
+use Cognesy\Polyglot\Inference\Contracts\CanTranslateInferenceRequest;
 use Cognesy\Polyglot\Inference\Data\InferenceRequest;
 
-class AnthropicRequestAdapter implements ProviderRequestAdapter
+class AnthropicRequestAdapter implements CanTranslateInferenceRequest
 {
     public function __construct(
         protected LLMConfig $config,
         protected CanMapRequestBody $bodyFormat,
     ) {}
 
-    public function toHttpClientRequest(InferenceRequest $request): HttpClientRequest {
-        return new HttpClientRequest(
+    public function toHttpRequest(InferenceRequest $request): HttpRequest {
+        return new HttpRequest(
             url: $this->toUrl($request),
             method: 'POST',
             headers: $this->toHeaders($request),

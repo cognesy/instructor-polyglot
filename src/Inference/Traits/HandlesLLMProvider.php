@@ -27,8 +27,8 @@ trait HandlesLLMProvider
         return $this;
     }
 
-    public function fromDSN(string $dsn) : static {
-        $this->llmProvider->withDSN($dsn);
+    public function withDsn(string $dsn) : static {
+        $this->llmProvider->withDsn($dsn);
         return $this;
     }
 
@@ -39,6 +39,11 @@ trait HandlesLLMProvider
 
     public function withHttpClient(HttpClient $httpClient) : static {
         $this->llmProvider->withHttpClient($httpClient);
+        return $this;
+    }
+
+    public function withHttpClientPreset(string $string) : static {
+        $this->llmProvider->withHttpPreset($string);
         return $this;
     }
 

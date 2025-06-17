@@ -5,7 +5,7 @@ namespace Cognesy\Polyglot\Inference;
 use Cognesy\Config\ConfigPresets;
 use Cognesy\Config\ConfigResolver;
 use Cognesy\Config\Contracts\CanProvideConfig;
-use Cognesy\Config\DSN;
+use Cognesy\Config\Dsn;
 use Cognesy\Config\Events\ConfigResolutionFailed;
 use Cognesy\Config\Events\ConfigResolved;
 use Cognesy\Events\Contracts\CanHandleEvents;
@@ -26,9 +26,11 @@ final class LLMProvider
     private ConfigPresets $presets;
 
     // Configuration - all immutable after construction
-    private ?string $debugPreset;
     private ?string $dsn;
     private ?string $llmPreset;
+    private ?string $debugPreset;
+    private ?string $httpClientPreset;
+
     private ?LLMConfig $explicitConfig;
     private ?HttpClient $explicitHttpClient;
     private ?CanHandleInference $explicitDriver;
@@ -66,7 +68,7 @@ final class LLMProvider
      * Quick creation with DSN
      */
     public static function dsn(string $dsn): LLMProvider {
-        return self::new()->withDSN($dsn);
+        return self::new()->withDsn($dsn);
     }
 
     /**
@@ -106,7 +108,7 @@ final class LLMProvider
     /**
      * Configure with DSN string
      */
-    public function withDSN(string $dsn): self {
+    public function withDsn(string $dsn): self {
         $this->dsn = $dsn;
         return $this;
     }
@@ -116,6 +118,12 @@ final class LLMProvider
      */
     public function withHttpClient(HttpClient $httpClient): self {
         $this->explicitHttpClient = $httpClient;
+        return $this;
+    }
+
+    public function withHttpPreset(string $preset): self {
+        // Create a new HTTP client builder with the specified preset
+        $this->httpClientPreset = $preset;
         return $this;
     }
 
@@ -173,7 +181,7 @@ final class LLMProvider
         $effectivePreset = $this->determinePreset();
 
         // Get DSN overrides if any
-        $dsnOverrides = $this->dsn !== null ? DSN::fromString($this->dsn)->toArray() : [];
+        $dsnOverrides = $this->dsn !== null ? Dsn::fromString($this->dsn)->toArray() : [];
 
         // Build config based on preset
         $result = Result::try(fn() => $this->presets->getOrDefault($effectivePreset));
@@ -217,11 +225,13 @@ final class LLMProvider
             return $this->explicitHttpClient;
         }
 
+        $preset = $this->httpClientPreset ?? $config->httpClientPreset;
+
         // Build new client
         $builder = (new HttpClientBuilder(
             $this->events,
             $this->configProvider,
-        ))->withPreset($config->httpClientPreset);
+        ))->withPreset($preset);
 
         // Apply debug setting if specified
         $builder = $builder->withDebugPreset($this->debugPreset);
@@ -235,7 +245,7 @@ final class LLMProvider
     private function determinePreset(): ?string {
         return match (true) {
             $this->llmPreset !== null => $this->llmPreset,
-            $this->dsn !== null => DSN::fromString($this->dsn)->param('preset'),
+            $this->dsn !== null => Dsn::fromString($this->dsn)->param('preset'),
             default => null,
         };
     }
