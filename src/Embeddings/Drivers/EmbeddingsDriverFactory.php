@@ -48,11 +48,11 @@ class EmbeddingsDriverFactory
             throw new InvalidArgumentException("Unknown driver: {$type}");
         }
 
-        $this->events->dispatch(new EmbeddingsDriverBuilt(
-            get_class($driver),
-            $config,
-            $httpClient
-        ));
+        $this->events->dispatch(new EmbeddingsDriverBuilt([
+            'driver' => get_class($driver),
+            'config' => $config->toArray(),
+            'httpClient' => $httpClient ? get_class($httpClient) : null,
+        ]));
 
         return $driver($config, $httpClient, $this->events);
     }
