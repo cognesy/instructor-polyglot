@@ -42,7 +42,7 @@ Polyglot requires API keys to authenticate with LLM providers. The recommended a
 1. Create a `.env` file in your project root (or use your existing one)
 2. Add your API keys:
 
-```
+```shell
 # OpenAI
 OPENAI_API_KEY=sk-your-openai-key
 
@@ -90,7 +90,7 @@ return [
 
     'presets' => [
         'openai' => [
-            'providerType' => 'openai',
+            'driver' => 'openai',
             'apiUrl' => 'https://api.openai.com/v1',
             'apiKey' => Env::get('OPENAI_API_KEY', ''),
             'endpoint' => '/chat/completions',
@@ -99,7 +99,7 @@ return [
         ],
 
         'anthropic' => [
-            'providerType' => 'anthropic',
+            'driver' => 'anthropic',
             'apiUrl' => 'https://api.anthropic.com/v1',
             'apiKey' => Env::get('ANTHROPIC_API_KEY', ''),
             'endpoint' => '/messages',
@@ -130,7 +130,7 @@ return [
 
     'presets' => [
         'openai' => [
-            'providerType' => 'openai',
+            'driver' => 'openai',
             'apiUrl' => 'https://api.openai.com/v1',
             'apiKey' => Env::get('OPENAI_API_KEY', ''),
             'endpoint' => '/embeddings',
@@ -148,7 +148,7 @@ return [
 
 By default, Polyglot looks for custom configuration files in the `config` directory relative to your project root. You can specify a different location by setting the `INSTRUCTOR_CONFIG_PATHS` environment variable:
 
-```
+```shell
 INSTRUCTOR_CONFIG_PATHS='/path/to/your/config,alternative/path'
 ```
 
