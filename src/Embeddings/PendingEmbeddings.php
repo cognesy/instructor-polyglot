@@ -16,7 +16,7 @@ class PendingEmbeddings
     private readonly EventDispatcherInterface $events;
     private readonly EmbeddingsRequest $request;
 
-    private HttpResponse $httpResponse;
+    private ?HttpResponse $httpResponse = null;
     private ?EmbeddingsResponse $response = null;
 
     public function __construct(
@@ -41,10 +41,15 @@ class PendingEmbeddings
     }
 
     public function makeResponse() : EmbeddingsResponse {
-        $this->httpResponse = $this->driver->handle($this->request);
+        /** @var HttpResponse $httpResponse */
+        $httpResponse = $this->driver->handle($this->request);
+        $this->httpResponse = $httpResponse;
         $responseBody = $this->httpResponse->body();
         $data = Json::decode($responseBody) ?? [];
         $response = $this->driver->fromData($data);
+        if ($response === null) {
+            throw new \RuntimeException('Failed to create embeddings response from data');
+        }
         $this->events->dispatch(new EmbeddingsResponseReceived($response));
         return $response;
     }

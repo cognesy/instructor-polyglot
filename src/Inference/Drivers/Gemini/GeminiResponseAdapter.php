@@ -17,6 +17,7 @@ class GeminiResponseAdapter implements CanTranslateInferenceResponse
         protected CanMapUsage $usageFormat,
     ) {}
 
+    #[\Override]
     public function fromResponse(HttpResponse $response): ?InferenceResponse {
         $responseBody = $response->body();
         $data = json_decode($responseBody, true);
@@ -29,6 +30,7 @@ class GeminiResponseAdapter implements CanTranslateInferenceResponse
         );
     }
 
+    #[\Override]
     public function fromStreamResponse(string $eventBody): ?PartialInferenceResponse {
         $data = json_decode($eventBody, true);
         if (empty($data)) {
@@ -45,6 +47,7 @@ class GeminiResponseAdapter implements CanTranslateInferenceResponse
         );
     }
 
+    #[\Override]
     public function toEventBody(string $data): string|bool {
         if (!str_starts_with($data, 'data:')) {
             return '';
@@ -79,9 +82,13 @@ class GeminiResponseAdapter implements CanTranslateInferenceResponse
     }
 
     private function makeContentPart(array $data, int $index) : string {
-        return $data['candidates'][0]['content']['parts'][$index]['text']
-            ?? Json::encode($data['candidates'][0]['content']['parts'][$index]['functionCall']['args'] ?? '')
-            ?? '';
+        if (isset($data['candidates'][0]['content']['parts'][$index]['text'])) {
+            return $data['candidates'][0]['content']['parts'][$index]['text'];
+        }
+        if (isset($data['candidates'][0]['content']['parts'][$index]['functionCall']['args'])) {
+            return Json::encode($data['candidates'][0]['content']['parts'][$index]['functionCall']['args']);
+        }
+        return '';
     }
 
     private function makeContentDelta(array $data): string {
@@ -99,9 +106,13 @@ class GeminiResponseAdapter implements CanTranslateInferenceResponse
     }
 
     private function makeContentDeltaPart(array $data, int $index) : string {
-        return $data['candidates'][0]['content']['parts'][$index]['text']
-            ?? Json::encode($data['candidates'][0]['content']['parts'][$index]['functionCall']['args'] ?? '')
-            ?? '';
+        if (isset($data['candidates'][0]['content']['parts'][$index]['text'])) {
+            return $data['candidates'][0]['content']['parts'][$index]['text'];
+        }
+        if (isset($data['candidates'][0]['content']['parts'][$index]['functionCall']['args'])) {
+            return Json::encode($data['candidates'][0]['content']['parts'][$index]['functionCall']['args']);
+        }
+        return '';
     }
 
     private function makeToolName(array $data) : string {

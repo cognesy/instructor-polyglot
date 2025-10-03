@@ -19,19 +19,24 @@ use RuntimeException;
 
 class BaseEmbedDriver implements CanHandleVectorization
 {
-    protected EmbeddingsConfig $config;
-    protected HttpClient $httpClient;
-    protected EventDispatcherInterface $events;
+    public function __construct(
+        protected EmbeddingsConfig $config,
+        protected HttpClient $httpClient,
+        protected EventDispatcherInterface $events,
+        protected EmbedRequestAdapter $requestAdapter,
+        protected EmbedResponseAdapter $responseAdapter
+    ) {
+    }
 
-    protected EmbedRequestAdapter $requestAdapter;
-    protected EmbedResponseAdapter $responseAdapter;
-
+    /** @psalm-suppress InvalidReturnType, InvalidReturnStatement - Return type matches interface */
+    #[\Override]
     public function handle(EmbeddingsRequest $request): HttpResponse {
         $clientRequest = $this->requestAdapter->toHttpClientRequest($request);
         $this->events->dispatch(new EmbeddingsRequested(['request' => $request->toArray()]));
         return $this->makeHttpResponse($clientRequest);
     }
 
+    #[\Override]
     public function fromData(array $data): ?EmbeddingsResponse {
         return $this->responseAdapter->fromResponse($data);
     }

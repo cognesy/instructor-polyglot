@@ -10,6 +10,7 @@ class GeminiOAIBodyFormat extends OpenAICompatibleBodyFormat
 {
     // CAPABILITIES /////////////////////////////////////////
 
+    #[\Override]
     protected function supportsNonTextResponseForTools(InferenceRequest $request) : bool {
         // Gemini OAI does not support non-text responses for tools
         return false;
@@ -17,23 +18,22 @@ class GeminiOAIBodyFormat extends OpenAICompatibleBodyFormat
 
     // INTERNAL /////////////////////////////////////////////
 
+    #[\Override]
     protected function toResponseFormat(InferenceRequest $request) : array {
-        $mode = $this->toResponseFormatMode($request);
-        switch ($mode) {
-            case OutputMode::Json:
-            case OutputMode::JsonSchema:
-                $result = ['type' => 'json_object'];
-                break;
-            case OutputMode::Text:
-            case OutputMode::MdJson:
-                $result = ['type' => 'text'];
-                break;
-            default:
-                $result = [];
+        if (!$request->hasResponseFormat()) {
+            return [];
         }
-        return $result;
+
+        $mode = $request->outputMode();
+        // Gemini OAI API supports: json_object, text (no schema support)
+        $responseFormat = $request->responseFormat()
+            ->withToJsonObjectHandler(fn() => ['type' => 'json_object'])
+            ->withToJsonSchemaHandler(fn() => ['type' => 'json_object']); // Falls back to json_object
+
+        return $responseFormat->as($mode);
     }
 
+    #[\Override]
     protected function toToolChoice(InferenceRequest $request) : array|string {
         $tools = $request->tools();
         $toolChoice = $request->toolChoice();

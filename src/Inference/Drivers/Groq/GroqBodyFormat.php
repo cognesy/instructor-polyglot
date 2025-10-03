@@ -8,6 +8,7 @@ use Cognesy\Polyglot\Inference\Enums\OutputMode;
 
 class GroqBodyFormat extends OpenAICompatibleBodyFormat
 {
+    #[\Override]
     public function toRequestBody(InferenceRequest $request) : array {
         $requestBody = parent::toRequestBody($request);
 
@@ -19,35 +20,32 @@ class GroqBodyFormat extends OpenAICompatibleBodyFormat
 
     // CAPABILITIES ///////////////////////////////////////////
 
+    #[\Override]
     protected function supportsNonTextResponseForTools(InferenceRequest $request) : bool {
         return false;
     }
 
     // INTERNAL ///////////////////////////////////////////////
 
+    #[\Override]
     protected function toResponseFormat(InferenceRequest $request) : array {
-        $mode = $this->toResponseFormatMode($request);
-        switch ($mode) {
-            case OutputMode::Json:
-                $result = ['type' => 'json_object'];
-                break;
-            case OutputMode::Text:
-            case OutputMode::MdJson:
-                $result = ['type' => 'text'];
-                break;
-            case OutputMode::JsonSchema:
-                [$schema, $schemaName, $schemaStrict] = $this->toSchemaData($request);
-                $result = [
-                    'type' => 'json_schema',
-                    'json_schema' => [
-                        'name' => $schemaName,
-                        'schema' => $schema,
-                        'strict' => $schemaStrict,
-                    ]];
-                break;
-            default:
-                $result = [];
+        if (!$request->hasResponseFormat()) {
+            return [];
         }
-        return $result;
+
+        $mode = $request->outputMode();
+        // Groq API supports: json_object, json_schema, text
+        $responseFormat = $request->responseFormat()
+            ->withToJsonObjectHandler(fn() => ['type' => 'json_object'])
+            ->withToJsonSchemaHandler(fn() => [
+                'type' => 'json_schema',
+                'json_schema' => [
+                    'name' => $request->responseFormat()->schemaName(),
+                    'schema' => $this->removeDisallowedEntries($request->responseFormat()->schema()),
+                    'strict' => $request->responseFormat()->strict(),
+                ],
+            ]);
+
+        return $responseFormat->as($mode);
     }
 }

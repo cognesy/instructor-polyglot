@@ -75,7 +75,7 @@ class PendingInference
     /**
      * Converts the response content to a JSON representation.
      *
-     * @return array The JSON representation of the content as an associative array.
+     * @return string The JSON representation of the content as a JSON string.
      */
     public function asJson() : string {
         return Json::fromString($this->get())->toString();
@@ -112,7 +112,7 @@ class PendingInference
     private function makeResponse(InferenceRequest $request) : InferenceResponse {
         return match($this->isStreamed()) {
             false => $this->driver->makeResponseFor($request),
-            true => $this->stream()->final(),
+            true => $this->stream()->final() ?? throw new \RuntimeException('Failed to generate final response from stream'),
         };
     }
 }

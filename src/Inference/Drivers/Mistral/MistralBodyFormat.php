@@ -16,6 +16,7 @@ class MistralBodyFormat implements CanMapRequestBody
         protected CanMapMessages $messageFormat
     ) {}
 
+    #[\Override]
     public function toRequestBody(InferenceRequest $request) : array {
         $request = $request->withCacheApplied();
 
@@ -56,31 +57,25 @@ class MistralBodyFormat implements CanMapRequestBody
     // INTERNAL /////////////////////////////////////////////
 
     protected function toResponseFormat(InferenceRequest $request) : array {
-        $mode = $this->toResponseFormatMode($request);
-        switch ($mode) {
-            case OutputMode::Json:
-                $result = ['type' => 'json_object'];
-                break;
-            case OutputMode::Text:
-            case OutputMode::MdJson:
-                $result = ['type' => 'text'];
-                break;
-            case OutputMode::JsonSchema:
-                [$schema, $schemaName, $schemaStrict] = $this->toSchemaData($request);
-                $result = [
-                    'type' => 'json_schema',
-                    'json_schema' => [
-                        'name' => $schemaName,
-                        'schema' => $schema,
-                        'strict' => $schemaStrict,
-                    ],
-                ];
-                break;
-            default:
-                $result = [];
+        if (!$request->hasResponseFormat()) {
+            return [];
         }
 
-        return array_filter($result, fn($value) => $value !== null && $value !== [] && $value !== '');
+        $mode = $this->toResponseFormatMode($request);
+        // Mistral API supports: json_object, json_schema, text
+        $responseFormat = $request->responseFormat()
+            ->withToJsonObjectHandler(fn() => ['type' => 'json_object'])
+            ->withToJsonSchemaHandler(fn() => [
+                'type' => 'json_schema',
+                'json_schema' => [
+                    'name' => $request->responseFormat()->schemaName(),
+                    'schema' => $request->responseFormat()->schemaFilteredWith($this->removeDisallowedEntries(...)),
+                    'strict' => $request->responseFormat()->strict(),
+                ],
+            ]);
+
+        $result = $responseFormat->as($mode);
+        return array_filter($result, fn($value) => $value !== null && ($value !== [] || $value !== ''));
     }
 
     private function toTools(InferenceRequest $request) : array {
@@ -123,7 +118,7 @@ class MistralBodyFormat implements CanMapRequestBody
         }
 
         $responseFormat = $request->responseFormat();
-        $type = $responseFormat['type'] ?? $responseFormat['json_schema']['type'] ?? '';
+        $type = $responseFormat->type();
         return match($type) {
             'json' => OutputMode::Json,
             'json_object' => OutputMode::Json,
@@ -132,6 +127,9 @@ class MistralBodyFormat implements CanMapRequestBody
         };
     }
 
+    /**
+     * @return array{0: array<string, mixed>, 1: string, 2: bool}
+     */
     protected function toSchemaData(InferenceRequest $request) : array {
         $responseFormat = $request->responseFormat();
         return [

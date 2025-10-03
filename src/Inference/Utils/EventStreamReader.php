@@ -19,8 +19,12 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 class EventStreamReader
 {
     protected EventDispatcherInterface $events;
+    /** @var (Closure(string): (string|bool))|null */
     protected ?Closure $parser;
 
+    /**
+     * @param Closure(string): (string|bool)|null $parser
+     */
     public function __construct(
         EventDispatcherInterface $events,
         ?Closure $parser = null,
@@ -78,7 +82,8 @@ class EventStreamReader
         if ($line === '') {
             return null;
         }
-        if (false === ($data = $this->parse($line))) {
+        $data = $this->parse($line);
+        if ($data === false || $data === true) {
             return null;
         }
         return $data;

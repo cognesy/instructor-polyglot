@@ -10,33 +10,28 @@ class FireworksBodyFormat extends OpenAICompatibleBodyFormat
 {
     // CAPABILITIES ///////////////////////////////////////////
 
+    #[\Override]
     protected function supportsNonTextResponseForTools(InferenceRequest $request) : bool {
         return false;
     }
 
     // INTERNAL ///////////////////////////////////////////////
 
+    #[\Override]
     protected function toResponseFormat(InferenceRequest $request) : array {
-        $mode = $this->toResponseFormatMode($request);
-        switch ($mode) {
-            case OutputMode::Json:
-                $result = ['type' => 'json_object'];
-                break;
-            case OutputMode::Text:
-            case OutputMode::MdJson:
-                $result = ['type' => 'text'];
-                break;
-            case OutputMode::JsonSchema:
-                [$schema, $schemaName, $schemaStrict] = $this->toSchemaData($request);
-                $result = [
-                    'type' => 'json_object',
-                    'schema' => $schema,
-                ];
-                break;
-            default:
-                $result = [];
+        if (!$request->hasResponseFormat()) {
+            return [];
         }
 
-        return $result;
+        $mode = $request->outputMode();
+        // Fireworks API supports: json_object with optional schema, text
+        $responseFormat = $request->responseFormat()
+            ->withToJsonObjectHandler(fn() => ['type' => 'json_object'])
+            ->withToJsonSchemaHandler(fn() => [
+                'type' => 'json_object',
+                'schema' => $this->removeDisallowedEntries($request->responseFormat()->schema()),
+            ]);
+
+        return $responseFormat->as($mode);
     }
 }

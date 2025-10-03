@@ -94,10 +94,12 @@ final class EmbeddingsProvider implements CanResolveEmbeddingsConfig, HasExplici
     /**
      * Resolves and returns the effective embeddings configuration for this provider.
      */
+    #[\Override]
     public function resolveConfig(): EmbeddingsConfig {
         return $this->buildConfig();
     }
 
+    #[\Override]
     public function explicitEmbeddingsDriver(): ?CanHandleVectorization {
         return $this->explicitDriver;
     }
@@ -124,7 +126,7 @@ final class EmbeddingsProvider implements CanResolveEmbeddingsConfig, HasExplici
                 'effectivePreset' => $effectivePreset,
                 'preset' => $this->preset,
                 'dsn' => $this->dsn,
-                'error' => $result->errorMessage(),
+                'error' => $result->exception()->getMessage(),
             ]));
             throw $result->exception();
         }
@@ -158,6 +160,6 @@ final class EmbeddingsProvider implements CanResolveEmbeddingsConfig, HasExplici
         if ($this->dsn === null) {
             return [];
         }
-        return Dsn::fromString($this->dsn)->toArray() ?? [];
+        return Dsn::fromString($this->dsn)->toArray();
     }
 }

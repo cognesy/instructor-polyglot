@@ -21,6 +21,7 @@ class InferenceStream
 {
     protected readonly EventDispatcherInterface $events;
     protected readonly CanHandleInference $driver;
+    /** @var (Closure(PartialInferenceResponse): void)|null */
     protected ?Closure $onPartialResponse = null;
 
     /** @var iterable<PartialInferenceResponse> */
@@ -90,7 +91,7 @@ class InferenceStream
     /**
      * Retrieves all partial LLM responses from the given stream.
      *
-     * @return iterable<PartialInferenceResponse> An array of all partial LLM responses.
+     * @return array<PartialInferenceResponse> An array of all partial LLM responses.
      */
     public function all(): array {
         if ($this->execution->response() === null) {
@@ -121,7 +122,7 @@ class InferenceStream
     /**
      * Sets a callback to be called when a partial response is received.
      *
-     * @param callable $callback
+     * @param callable(PartialInferenceResponse): void $callback
      */
     public function onPartialResponse(callable $callback): self {
         $this->onPartialResponse = $callback(...);
@@ -137,7 +138,7 @@ class InferenceStream
     /**
      * Processes the given stream to generate partial LLM responses and enriches them with accumulated content and finish reason.
      *
-     * @param Generator<PartialInferenceResponse> $stream The stream to be processed to extract and enrich partial LLM responses.
+     * @param iterable<PartialInferenceResponse> $stream The stream to be processed to extract and enrich partial LLM responses.
      * @return Generator<PartialInferenceResponse> A generator yielding enriched PartialInferenceResponse objects.
      */
     private function makePartialResponses(iterable $stream): Generator {
