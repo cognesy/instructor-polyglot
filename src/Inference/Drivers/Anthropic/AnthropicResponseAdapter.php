@@ -2,7 +2,7 @@
 
 namespace Cognesy\Polyglot\Inference\Drivers\Anthropic;
 
-use Cognesy\Http\Contracts\HttpResponse;
+use Cognesy\Http\Data\HttpResponse;
 use Cognesy\Polyglot\Inference\Collections\ToolCalls;
 use Cognesy\Polyglot\Inference\Contracts\CanMapUsage;
 use Cognesy\Polyglot\Inference\Contracts\CanTranslateInferenceResponse;
@@ -28,12 +28,12 @@ class AnthropicResponseAdapter implements CanTranslateInferenceResponse
             toolCalls: $this->makeToolCalls($data),
             reasoningContent: $this->makeReasoningContent($data),
             usage: $this->usageFormat->fromData($data),
-            responseData: $data,
+            responseData: $response,
         );
     }
 
     #[\Override]
-    public function fromStreamResponse(string $eventBody): ?PartialInferenceResponse {
+    public function fromStreamResponse(string $eventBody, ?HttpResponse $responseData = null): ?PartialInferenceResponse {
         //$eventBody = $this->normalizeUnknownValues($responseBody);
         $data = json_decode($eventBody, true);
         if (empty($data)) {
@@ -47,7 +47,7 @@ class AnthropicResponseAdapter implements CanTranslateInferenceResponse
             toolArgs: $data['delta']['partial_json'] ?? '',
             finishReason: $data['delta']['stop_reason'] ?? $data['message']['stop_reason'] ?? '',
             usage: $this->usageFormat->fromData($data),
-            responseData: $data,
+            responseData: $responseData,
         );
     }
 

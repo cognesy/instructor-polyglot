@@ -94,12 +94,13 @@ class InferenceStream
      * @return array<PartialInferenceResponse> An array of all partial LLM responses.
      */
     public function all(): array {
+        $responses = [];
         if ($this->execution->response() === null) {
             foreach ($this->makePartialResponses($this->stream) as $partialResponse) {
-                $tmp = $partialResponse;
+                $responses[] = $partialResponse;
             }
         }
-        return $this->execution->partialResponses()->all();
+        return $responses;
     }
 
     /**
@@ -110,7 +111,7 @@ class InferenceStream
      */
     public function final(): ?InferenceResponse {
         if ($this->execution->response() === null) {
-            if (!$this->execution->partialResponses()->isEmpty()) {
+            if ($this->execution->partialResponse()) {
                 $this->execution = $this->execution->withFinalizedPartialResponse();
             } else {
                 foreach ($this->makePartialResponses($this->stream) as $_) {}
@@ -142,35 +143,21 @@ class InferenceStream
      * @return Generator<PartialInferenceResponse> A generator yielding enriched PartialInferenceResponse objects.
      */
     private function makePartialResponses(iterable $stream): Generator {
-        $accumulation = ContentAccumulation::empty();
-
+        $priorResponse = PartialInferenceResponse::empty();
         /** @var PartialInferenceResponse $partialResponse */
         foreach ($stream as $partialResponse) {
             if ($partialResponse === null) {
                 continue;
             }
-
-            $accumulation = $accumulation->withPartialResponse($partialResponse);
-            $enrichedResponse = $this->enrichResponse($partialResponse, $accumulation);
-            $this->notifyOnPartialResponse($enrichedResponse);
-
-            yield $enrichedResponse;
+            // Always enrich with accumulated content/state (tools, usage, content)
+            $partialResponse = $partialResponse->withAccumulatedContent($priorResponse);
+            $this->notifyOnPartialResponse($partialResponse);
+            yield $partialResponse;
+            // we need this to accumulate some fields (content, finish reason, reasoning content)
+            $priorResponse = $partialResponse;
         }
 
         $this->finalizeStream();
-    }
-
-    /**
-     * Enriches partial response with accumulated content and finish reason.
-     */
-    private function enrichResponse(
-        PartialInferenceResponse $partialResponse,
-        ContentAccumulation $accumulation
-    ): PartialInferenceResponse {
-        return $partialResponse
-            ->withContent($accumulation->content)
-            ->withReasoningContent($accumulation->reasoningContent)
-            ->withFinishReason($accumulation->finishReason);
     }
 
     /**

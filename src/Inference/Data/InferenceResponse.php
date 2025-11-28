@@ -2,6 +2,7 @@
 
 namespace Cognesy\Polyglot\Inference\Data;
 
+use Cognesy\Http\Data\HttpResponse;
 use Cognesy\Polyglot\Inference\Collections\ToolCalls;
 use Cognesy\Polyglot\Inference\Enums\InferenceFinishReason;
 use Cognesy\Polyglot\Inference\Enums\OutputMode;
@@ -23,9 +24,11 @@ final readonly class InferenceResponse
     private string $content;
     private string $reasoningContent;
     private string $finishReason;
+
     private ToolCalls $toolCalls;
     private Usage $usage;
-    private array $responseData;
+    private HttpResponse $responseData;
+
     private bool $isPartial;
 
     public function __construct(
@@ -34,7 +37,7 @@ final readonly class InferenceResponse
         ?ToolCalls $toolCalls = null,
         string $reasoningContent = '',
         ?Usage $usage = null,
-        array $responseData = [],
+        ?HttpResponse $responseData = null,
         bool $isPartial = false,
         mixed $value = null, // processed / transformed value
         //
@@ -51,13 +54,26 @@ final readonly class InferenceResponse
         $this->finishReason = $finishReason;
         $this->toolCalls = $toolCalls ?? new ToolCalls();
         $this->reasoningContent = $reasoningContent;
-        $this->responseData = $responseData;
+        $this->responseData = $responseData ?? HttpResponse::empty();
         $this->usage = $usage ?? new Usage();
+
         $this->isPartial = $isPartial;
     }
 
     public static function empty() : self {
         return new self();
+    }
+
+    public static function fromAccumulatedPartial(PartialInferenceResponse $partial): InferenceResponse {
+        return new InferenceResponse(
+            content: $partial->content(),
+            finishReason: $partial->finishReason(),
+            toolCalls: $partial->toolCalls(),
+            reasoningContent: $partial->reasoningContent(),
+            usage: $partial->usage(),
+            responseData: $partial->responseData,
+            isPartial: false,
+        );
     }
 
     // ACCESSORS /////////////////////////////////////////////
@@ -86,12 +102,12 @@ final readonly class InferenceResponse
         return InferenceFinishReason::fromText($this->finishReason);
     }
 
-    public function responseData(): array {
-        return $this->responseData;
-    }
-
     public function isPartial(): bool {
         return $this->isPartial;
+    }
+
+    public function responseData(): HttpResponse {
+        return $this->responseData;
     }
 
     // HAS/IS ////////////////////////////////////////////////
@@ -126,7 +142,7 @@ final readonly class InferenceResponse
         return match (true) {
             is_null($mode) => Json::fromString($this->content),
             OutputMode::Tools->is($mode) && $this->hasToolCalls() => match (true) {
-                $this->toolCalls->hasSingle() => Json::fromArray($this->toolCalls->first()->args()),
+                $this->toolCalls->hasSingle() => Json::fromArray($this->toolCalls->first()?->args() ?? []),
                 default => Json::fromArray($this->toolCalls->toArray()),
             },
             //$this->hasContent() => Json::fromString($this->content),
@@ -142,7 +158,7 @@ final readonly class InferenceResponse
         ?ToolCalls $toolCalls = null,
         ?string $reasoningContent = null,
         ?Usage $usage = null,
-        ?array $responseData = null,
+        ?HttpResponse $responseData = null,
         ?bool $isPartial = null,
         mixed $value = null,
     ): self {
@@ -184,7 +200,7 @@ final readonly class InferenceResponse
             'toolCalls' => $this->toolCalls->toArray(),
             'reasoningContent' => $this->reasoningContent,
             'usage' => $this->usage->toArray(),
-            'responseData' => $this->responseData, // raw response data
+            'responseData' => $this->responseData->toArray(), // raw response data
             'isPartial' => $this->isPartial,
             //
             'id' => $this->id,
@@ -200,7 +216,7 @@ final readonly class InferenceResponse
             toolCalls: isset($data['toolCalls']) ? ToolCalls::fromArray($data['toolCalls']) : null,
             reasoningContent: $data['reasoningContent'] ?? '',
             usage: isset($data['usage']) ? Usage::fromArray($data['usage']) : null,
-            responseData: $data['responseData'] ?? [],
+            responseData: HttpResponse::fromArray($data['responseData'] ?? []),
             isPartial: $data['isPartial'] ?? false,
             //
             id: $data['id'] ?? null,
