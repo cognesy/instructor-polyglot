@@ -4,7 +4,7 @@ namespace Cognesy\Polyglot\Inference\Data;
 
 use Cognesy\Messages\Messages;
 
-class CachedContext
+class CachedInferenceContext
 {
     private Messages $messages;
     private array $tools;
