@@ -4,36 +4,35 @@ namespace Cognesy\Polyglot\Inference\Drivers\GeminiOAI;
 
 use Cognesy\Http\HttpClient;
 use Cognesy\Polyglot\Inference\Config\LLMConfig;
-use Cognesy\Polyglot\Inference\Contracts\CanTranslateInferenceRequest;
-use Cognesy\Polyglot\Inference\Contracts\CanTranslateInferenceResponse;
 use Cognesy\Polyglot\Inference\Data\DriverCapabilities;
-use Cognesy\Polyglot\Inference\Drivers\BaseInferenceDriver;
+use Cognesy\Polyglot\Inference\Drivers\BaseInferenceRequestDriver;
 use Cognesy\Polyglot\Inference\Drivers\OpenAI\OpenAIMessageFormat;
 use Cognesy\Polyglot\Inference\Drivers\OpenAI\OpenAIRequestAdapter;
 use Cognesy\Polyglot\Inference\Drivers\OpenAI\OpenAIResponseAdapter;
 use Cognesy\Polyglot\Inference\Enums\OutputMode;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-class GeminiOAIDriver extends BaseInferenceDriver
+class GeminiOAIDriver extends BaseInferenceRequestDriver
 {
-    protected CanTranslateInferenceRequest $requestTranslator;
-    protected CanTranslateInferenceResponse $responseTranslator;
-
     public function __construct(
-        protected LLMConfig $config,
-        protected HttpClient $httpClient,
-        protected EventDispatcherInterface $events,
-    )
-    {
-        $this->requestTranslator = new GeminiOAIRequestAdapter(
-            $config,
-            new GeminiOAIBodyFormat(
+        LLMConfig $config,
+        HttpClient $httpClient,
+        EventDispatcherInterface $events,
+    ) {
+        parent::__construct(
+            config: $config,
+            httpClient: $httpClient,
+            events: $events,
+            requestTranslator: new GeminiOAIRequestAdapter(
                 $config,
-                new OpenAIMessageFormat(),
-            )
-        );
-        $this->responseTranslator = new OpenAIResponseAdapter(
-            new GeminiOAIUsageFormat()
+                new GeminiOAIBodyFormat(
+                    $config,
+                    new OpenAIMessageFormat(),
+                )
+            ),
+            responseTranslator: new OpenAIResponseAdapter(
+                new GeminiOAIUsageFormat()
+            ),
         );
     }
 

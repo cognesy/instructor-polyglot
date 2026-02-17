@@ -11,9 +11,10 @@ trait HandlesFluentMethods
     private array $options = [];
     private ?EmbeddingsRetryPolicy $retryPolicy = null;
 
-    public function withInputs(string|array $input) : self {
-        $this->inputs = $input;
-        return $this;
+    public function withInputs(string|array $input) : static {
+        $copy = clone $this;
+        $copy->inputs = $input;
+        return $copy;
     }
 
     /**
@@ -21,9 +22,10 @@ trait HandlesFluentMethods
      * @param string $model
      * @return $this
      */
-    public function withModel(string $model) : self {
-        $this->model = $model;
-        return $this;
+    public function withModel(string $model) : static {
+        $copy = clone $this;
+        $copy->model = $model;
+        return $copy;
     }
 
     /**
@@ -31,13 +33,15 @@ trait HandlesFluentMethods
      * @param array $options
      * @return $this
      */
-    public function withOptions(array $options) : self {
-        $this->options = $options;
-        return $this;
+    public function withOptions(array $options) : static {
+        $copy = clone $this;
+        $copy->options = $options;
+        return $copy;
     }
 
-    public function withRetryPolicy(EmbeddingsRetryPolicy $retryPolicy) : self {
-        $this->retryPolicy = $retryPolicy;
-        return $this;
+    public function withRetryPolicy(EmbeddingsRetryPolicy $retryPolicy) : static {
+        $copy = clone $this;
+        $copy->retryPolicy = $retryPolicy;
+        return $copy;
     }
 }

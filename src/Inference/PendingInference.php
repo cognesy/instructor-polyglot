@@ -2,7 +2,7 @@
 
 namespace Cognesy\Polyglot\Inference;
 
-use Cognesy\Polyglot\Inference\Contracts\CanHandleInference;
+use Cognesy\Polyglot\Inference\Contracts\CanProcessInferenceRequest;
 use Cognesy\Polyglot\Inference\Config\InferenceRetryPolicy;
 use Cognesy\Polyglot\Inference\Creation\InferenceRequestBuilder;
 use Cognesy\Polyglot\Inference\Data\InferenceExecution;
@@ -33,7 +33,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
  */
 class PendingInference
 {
-    protected readonly CanHandleInference $driver;
+    protected readonly CanProcessInferenceRequest $driver;
     protected readonly EventDispatcherInterface $events;
 
     protected InferenceExecution $execution;
@@ -44,12 +44,13 @@ class PendingInference
     private int $attemptNumber = 0;
     private ?InferenceResponse $cachedResponse = null;
     private ?InferenceStream $cachedStream = null;
+    private ?\Throwable $terminalError = null;
 
     public function __construct(
-        InferenceExecution $execution,
-        CanHandleInference $driver,
-        EventDispatcherInterface $eventDispatcher,
-        ?Pricing $pricing = null,
+        InferenceExecution         $execution,
+        CanProcessInferenceRequest $driver,
+        EventDispatcherInterface   $eventDispatcher,
+        ?Pricing                   $pricing = null,
     ) {
         $this->execution = $execution;
         $this->events = $eventDispatcher;
@@ -132,12 +133,43 @@ class PendingInference
      * @return InferenceResponse The constructed InferenceResponse object, either fully or from partial responses if streaming is enabled.
      */
     public function response() : InferenceResponse {
+        if ($this->terminalError !== null) {
+            throw $this->terminalError;
+        }
         $existingResponse = $this->execution->response();
         if ($existingResponse !== null) {
             return $existingResponse;
         }
         if ($this->shouldCache() && $this->cachedResponse !== null) {
             return $this->cachedResponse;
+        }
+
+        // If a stream was already created, delegate to it — do not re-execute
+        if ($this->cachedStream !== null) {
+            $this->dispatchInferenceStarted();
+            $this->dispatchAttemptStarted();
+
+            $response = $this->cachedStream->final()
+                ?? throw new \RuntimeException('Failed to generate final response from stream');
+
+            if ($response->hasFinishedWithFailure()) {
+                $this->execution = $this->execution->withFailedAttempt(response: $response);
+                $finishReason = $response->finishReason();
+                $error = new \RuntimeException('Inference execution failed: ' . $finishReason->value);
+                $this->handleAttemptFailure($error, $response, false);
+                $this->dispatchInferenceCompleted(isSuccess: false);
+                $this->terminalError = $error;
+                throw $error;
+            }
+
+            $this->execution = $this->execution->withSuccessfulAttempt(response: $response);
+            $this->handleAttemptSuccess($response);
+            $this->dispatchInferenceCompleted(isSuccess: true);
+
+            if ($this->shouldCache()) {
+                $this->cachedResponse = $response;
+            }
+            return $response;
         }
 
         $policy = $this->execution->request()->retryPolicy() ?? new InferenceRetryPolicy();
@@ -147,6 +179,7 @@ class PendingInference
         $this->dispatchInferenceStarted();
 
         while (true) {
+            $this->cachedStream = null;
             $this->dispatchAttemptStarted();
 
             try {
@@ -157,6 +190,7 @@ class PendingInference
                 $this->handleAttemptFailure($e, null, $shouldRetry);
                 if (!$shouldRetry) {
                     $this->dispatchInferenceCompleted(isSuccess: false);
+                    $this->terminalError = $e;
                     throw $e;
                 }
 
@@ -189,6 +223,7 @@ class PendingInference
                     $error = new \RuntimeException('Inference blocked by content filter');
                     $this->handleAttemptFailure($error, $response, false);
                     $this->dispatchInferenceCompleted(isSuccess: false);
+                    $this->terminalError = $error;
                     throw $error;
                 }
 
@@ -198,6 +233,7 @@ class PendingInference
                 $this->handleAttemptFailure($error, $response, $shouldRetry);
                 if (!$shouldRetry) {
                     $this->dispatchInferenceCompleted(isSuccess: false);
+                    $this->terminalError = $error;
                     throw $error;
                 }
                 $delayMs = $policy->delayMsForAttempt($this->attemptNumber);
@@ -290,7 +326,9 @@ class PendingInference
         bool $willRetry = false
     ): void {
         $attemptId = $this->currentAttemptId();
-        $partialUsage = $response?->usage() ?? $this->execution->partialResponse()?->usage();
+        $partialUsage = $response?->usage()
+            ?? $this->cachedStream?->execution()->partialResponse()?->usage()
+            ?? $this->execution->partialResponse()?->usage();
         $statusCode = $error instanceof HttpRequestException ? $error->getStatusCode() : null;
 
         $this->events->dispatch(InferenceAttemptFailed::fromThrowable(

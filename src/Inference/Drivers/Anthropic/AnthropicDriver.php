@@ -4,32 +4,32 @@ namespace Cognesy\Polyglot\Inference\Drivers\Anthropic;
 
 use Cognesy\Http\HttpClient;
 use Cognesy\Polyglot\Inference\Config\LLMConfig;
-use Cognesy\Polyglot\Inference\Contracts\CanTranslateInferenceRequest;
-use Cognesy\Polyglot\Inference\Contracts\CanTranslateInferenceResponse;
 use Cognesy\Polyglot\Inference\Data\DriverCapabilities;
-use Cognesy\Polyglot\Inference\Drivers\BaseInferenceDriver;
+use Cognesy\Polyglot\Inference\Drivers\BaseInferenceRequestDriver;
 use Cognesy\Polyglot\Inference\Enums\OutputMode;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-class AnthropicDriver extends BaseInferenceDriver
+class AnthropicDriver extends BaseInferenceRequestDriver
 {
-    protected CanTranslateInferenceRequest  $requestTranslator;
-    protected CanTranslateInferenceResponse $responseTranslator;
-
     public function __construct(
-        protected LLMConfig $config,
-        protected HttpClient $httpClient,
-        protected EventDispatcherInterface $events,
+        LLMConfig $config,
+        HttpClient $httpClient,
+        EventDispatcherInterface $events,
     ) {
-        $this->requestTranslator = new AnthropicRequestAdapter(
-            $config,
-            new AnthropicBodyFormat(
+        parent::__construct(
+            config: $config,
+            httpClient: $httpClient,
+            events: $events,
+            requestTranslator: new AnthropicRequestAdapter(
                 $config,
-                new AnthropicMessageFormat(),
-            )
-        );
-        $this->responseTranslator = new AnthropicResponseAdapter(
-            new AnthropicUsageFormat()
+                new AnthropicBodyFormat(
+                    $config,
+                    new AnthropicMessageFormat(),
+                )
+            ),
+            responseTranslator: new AnthropicResponseAdapter(
+                new AnthropicUsageFormat()
+            ),
         );
     }
 

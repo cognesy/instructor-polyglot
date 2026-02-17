@@ -1,17 +1,14 @@
 <?php
 
 use Cognesy\Events\Dispatchers\EventDispatcher;
-use Cognesy\Http\Data\HttpRequest;
-use Cognesy\Http\Data\HttpResponse;
 use Cognesy\Http\Exceptions\TimeoutException;
-use Cognesy\Polyglot\Inference\Contracts\CanHandleInference;
+use Cognesy\Polyglot\Inference\Contracts\CanProcessInferenceRequest;
 use Cognesy\Polyglot\Inference\Config\InferenceRetryPolicy;
 use Cognesy\Polyglot\Inference\Creation\InferenceRequestBuilder;
 use Cognesy\Polyglot\Inference\Data\DriverCapabilities;
 use Cognesy\Polyglot\Inference\Data\InferenceExecution;
 use Cognesy\Polyglot\Inference\Data\InferenceRequest;
 use Cognesy\Polyglot\Inference\Data\InferenceResponse;
-use Cognesy\Polyglot\Inference\Data\PartialInferenceResponse;
 use Cognesy\Polyglot\Inference\Events\InferenceAttemptStarted;
 use Cognesy\Polyglot\Inference\PendingInference;
 
@@ -23,7 +20,7 @@ it('uses a unique attempt id for each retry', function () {
         $attemptIds[] = $event->attemptId;
     });
 
-    $driver = new class implements CanHandleInference {
+    $driver = new class implements CanProcessInferenceRequest {
         private int $calls = 0;
 
         public function makeResponseFor(InferenceRequest $request): InferenceResponse {
@@ -35,18 +32,6 @@ it('uses a unique attempt id for each retry', function () {
         }
 
         public function makeStreamResponsesFor(InferenceRequest $request): iterable {
-            return [];
-        }
-
-        public function toHttpRequest(InferenceRequest $request): HttpRequest {
-            return new HttpRequest(url: 'http://example.test', method: 'POST', headers: [], body: '', options: []);
-        }
-
-        public function httpResponseToInference(HttpResponse $httpResponse): InferenceResponse {
-            return InferenceResponse::empty();
-        }
-
-        public function httpResponseToInferenceStream(HttpResponse $httpResponse): iterable {
             return [];
         }
 

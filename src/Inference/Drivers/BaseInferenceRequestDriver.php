@@ -7,7 +7,7 @@ use Cognesy\Http\Data\HttpResponse;
 use Cognesy\Http\HttpClient;
 use Cognesy\Http\Exceptions\HttpRequestException;
 use Cognesy\Polyglot\Inference\Config\LLMConfig;
-use Cognesy\Polyglot\Inference\Contracts\CanHandleInference;
+use Cognesy\Polyglot\Inference\Contracts\CanProcessInferenceRequest;
 use Cognesy\Polyglot\Inference\Contracts\CanTranslateInferenceRequest;
 use Cognesy\Polyglot\Inference\Contracts\CanTranslateInferenceResponse;
 use Cognesy\Polyglot\Inference\Data\DriverCapabilities;
@@ -20,24 +20,19 @@ use Cognesy\Polyglot\Inference\Events\InferenceFailed;
 use Cognesy\Polyglot\Inference\Events\InferenceRequested;
 use Cognesy\Polyglot\Inference\Events\InferenceResponseCreated;
 use Cognesy\Polyglot\Inference\Streaming\EventStreamReader;
-use Exception;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use RuntimeException;
 use Throwable;
 
-abstract class BaseInferenceDriver implements CanHandleInference
+abstract class BaseInferenceRequestDriver implements CanProcessInferenceRequest
 {
-    /** @phpstan-ignore-next-line */
-    protected LLMConfig $config;
-    /** @phpstan-ignore-next-line */
-    protected HttpClient $httpClient;
-    /** @phpstan-ignore-next-line */
-    protected EventDispatcherInterface $events;
-
-    /** @phpstan-ignore-next-line */
-    protected CanTranslateInferenceRequest $requestTranslator;
-    /** @phpstan-ignore-next-line */
-    protected CanTranslateInferenceResponse $responseTranslator;
+    public function __construct(
+        protected LLMConfig $config,
+        protected HttpClient $httpClient,
+        protected EventDispatcherInterface $events,
+        protected CanTranslateInferenceRequest $requestTranslator,
+        protected CanTranslateInferenceResponse $responseTranslator,
+    ) {}
 
     #[\Override]
     public function makeResponseFor(InferenceRequest $request): InferenceResponse {
@@ -54,57 +49,6 @@ abstract class BaseInferenceDriver implements CanHandleInference
         $httpRequest = $this->toHttpRequest($request);
         $httpResponse = $this->makeHttpResponse($httpRequest);
         return $this->httpResponseToInferenceStream($httpResponse);
-    }
-
-    #[\Override]
-    public function toHttpRequest(InferenceRequest $request): HttpRequest {
-        $this->events->dispatch(new InferenceRequested(['request' => $request->toArray()]));
-        return $this->requestTranslator->toHttpRequest($request);
-    }
-
-    #[\Override]
-    public function httpResponseToInference(HttpResponse $httpResponse): InferenceResponse {
-        try {
-            $inferenceResponse = $this->responseTranslator->fromResponse($httpResponse);
-            if ($inferenceResponse === null) {
-                throw new RuntimeException('Failed to translate HTTP response to InferenceResponse');
-            }
-        } catch (Exception $e) {
-            $this->dispatchInferenceProcessingFailed($httpResponse, $e);
-            throw $e;
-        }
-
-        // Attach pricing from config if available
-        $pricing = $this->config->getPricing();
-        if ($pricing->hasAnyPricing()) {
-            $inferenceResponse = $inferenceResponse->withPricing($pricing);
-        }
-
-        $this->events->dispatch(new InferenceResponseCreated(['response' => $inferenceResponse->toArray()]));
-        return $inferenceResponse;
-    }
-
-    /**
-     * @return iterable<PartialInferenceResponse>
-     */
-    #[\Override]
-    public function httpResponseToInferenceStream(HttpResponse $httpResponse): iterable {
-        $reader = new EventStreamReader(
-            events: $this->events,
-            parser: $this->toEventBody(...),
-        );
-        try {
-            foreach ($reader->eventsFrom($httpResponse->stream()) as $eventBody) {
-                $partialResponse = $this->responseTranslator->fromStreamResponse($eventBody, $httpResponse);
-                if ($partialResponse === null) {
-                    continue;
-                }
-                yield $partialResponse;
-            }
-        } catch (Exception $e) {
-            $this->dispatchInferenceStreamFailed($httpResponse, $e);
-            throw $e;
-        }
     }
 
     /**
@@ -126,13 +70,58 @@ abstract class BaseInferenceDriver implements CanHandleInference
 
     // INTERNAL //////////////////////////////////////////////
 
+    protected function toHttpRequest(InferenceRequest $request): HttpRequest {
+        $this->events->dispatch(new InferenceRequested(['request' => $request->toArray()]));
+        return $this->requestTranslator->toHttpRequest($request);
+    }
+
+    protected function httpResponseToInference(HttpResponse $httpResponse): InferenceResponse {
+        try {
+            $inferenceResponse = $this->responseTranslator->fromResponse($httpResponse);
+            if ($inferenceResponse === null) {
+                throw new RuntimeException('Failed to translate HTTP response to InferenceResponse');
+            }
+        } catch (Throwable $e) {
+            $this->dispatchInferenceProcessingFailed($httpResponse, $e);
+            throw $e;
+        }
+
+        // Attach pricing from config if available
+        $pricing = $this->config->getPricing();
+        if ($pricing->hasAnyPricing()) {
+            $inferenceResponse = $inferenceResponse->withPricing($pricing);
+        }
+
+        $this->events->dispatch(new InferenceResponseCreated(['response' => $inferenceResponse->toArray()]));
+        return $inferenceResponse;
+    }
+
+    /**
+     * @return iterable<PartialInferenceResponse>
+     */
+    protected function httpResponseToInferenceStream(HttpResponse $httpResponse): iterable {
+        $reader = new EventStreamReader(
+            events: $this->events,
+            parser: $this->toEventBody(...),
+        );
+        try {
+            yield from $this->responseTranslator->fromStreamResponses(
+                $reader->eventsFrom($httpResponse->stream()),
+                $httpResponse,
+            );
+        } catch (Throwable $e) {
+            $this->dispatchInferenceStreamFailed($httpResponse, $e);
+            throw $e;
+        }
+    }
+
     protected function makeHttpResponse(HttpRequest $request): HttpResponse {
         try {
             $httpResponse = $this->httpClient->withRequest($request)->get();
         } catch (HttpRequestException $e) {
             $this->dispatchInferenceSendingFailed($request, $e);
             throw ProviderErrorClassifier::fromHttpException($e);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->dispatchInferenceSendingFailed($request, $e);
             throw $e;
         }
@@ -168,7 +157,7 @@ abstract class BaseInferenceDriver implements CanHandleInference
         ]));
     }
 
-    private function dispatchInferenceStreamFailed(HttpResponse $response, Exception $e): void {
+    private function dispatchInferenceStreamFailed(HttpResponse $response, Throwable $e): void {
         $this->events->dispatch(new InferenceFailed([
             'context' => 'Failed to process streamed response',
             'exception' => $e->getMessage(),
@@ -178,7 +167,7 @@ abstract class BaseInferenceDriver implements CanHandleInference
         ]));
     }
 
-    private function dispatchInferenceProcessingFailed(HttpResponse $httpResponse, Exception $e): void {
+    private function dispatchInferenceProcessingFailed(HttpResponse $httpResponse, Throwable $e): void {
         $this->events->dispatch(new InferenceFailed([
             'context' => 'Failed to process response',
             'exception' => $e->getMessage(),

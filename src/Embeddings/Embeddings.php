@@ -7,6 +7,7 @@ use Cognesy\Config\Contracts\CanProvideConfig;
 use Cognesy\Events\Contracts\CanHandleEvents;
 use Cognesy\Events\EventBusResolver;
 use Cognesy\Events\Traits\HandlesEvents;
+use Cognesy\Polyglot\Embeddings\Contracts\CanCreateEmbeddings;
 use Cognesy\Polyglot\Embeddings\Contracts\CanResolveEmbeddingsConfig;
 use Cognesy\Polyglot\Embeddings\Drivers\EmbeddingsDriverFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -14,7 +15,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 /**
  * Embeddings is a facade responsible for generating embeddings for provided input data
  */
-class Embeddings
+class Embeddings implements CanCreateEmbeddings
 {
     use HandlesEvents;
 
@@ -25,6 +26,8 @@ class Embeddings
 
     protected EmbeddingsProvider $embeddingsProvider;
     protected ?CanResolveEmbeddingsConfig $embeddingsResolver = null;
+    protected ?EmbeddingsRuntime $runtimeCache = null;
+    protected bool $runtimeCacheDirty = true;
     /** @var HttpClient|null Facade-level HTTP client (optional) */
     protected ?HttpClient $httpClient = null;
     /** @var string|null Facade-level HTTP debug preset (optional) */
@@ -41,10 +44,22 @@ class Embeddings
         );
     }
 
+    public function withEventHandler(CanHandleEvents|EventDispatcherInterface $events): static {
+        $copy = clone $this;
+        $copy->events = EventBusResolver::using($events);
+        $copy->invalidateRuntimeCache();
+        return $copy;
+    }
+
     /**
      * @param callable(Config\EmbeddingsConfig, HttpClient, EventDispatcherInterface): Contracts\CanHandleVectorization|string $driver
      */
     public static function registerDriver(string $name, string|callable $driver) : void {
         EmbeddingsDriverFactory::registerDriver($name, $driver);
+    }
+
+    protected function invalidateRuntimeCache(): void {
+        $this->runtimeCache = null;
+        $this->runtimeCacheDirty = true;
     }
 }
