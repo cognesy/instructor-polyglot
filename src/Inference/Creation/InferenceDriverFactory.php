@@ -3,7 +3,6 @@
 namespace Cognesy\Polyglot\Inference\Creation;
 
 use Cognesy\Events\Contracts\CanHandleEvents;
-use Cognesy\Events\EventBusResolver;
 use Cognesy\Http\Contracts\CanManageStreamCache;
 use Cognesy\Http\HttpClient;
 use Cognesy\Polyglot\Inference\Config\LLMConfig;
@@ -35,7 +34,6 @@ use Cognesy\Polyglot\Inference\Drivers\XAI\XAiDriver;
 use Cognesy\Polyglot\Inference\Drivers\BaseInferenceRequestDriver;
 use Cognesy\Polyglot\Inference\Events\InferenceDriverBuilt;
 use InvalidArgumentException;
-use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Factory class for creating inference driver instances based
@@ -44,7 +42,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 class InferenceDriverFactory
 {
     /** @var array<string, callable(LLMConfig,HttpClient,CanHandleEvents):CanProcessInferenceRequest> */
-    private static array $pendingDrivers = [];
+    private static array $registeredDrivers = [];
 
     /** @var array<string, callable(LLMConfig,HttpClient,CanHandleEvents):CanProcessInferenceRequest> */
     private array $drivers = [];
@@ -53,12 +51,11 @@ class InferenceDriverFactory
     private CanHandleEvents $events;
 
     public function __construct(
-        CanHandleEvents|EventDispatcherInterface $events,
+        CanHandleEvents $events,
     ) {
-        $this->events = EventBusResolver::using($events);
+        $this->events = $events;
         $this->bundledDrivers = $this->bundledDrivers();
-        $this->drivers = self::$pendingDrivers;
-        self::$pendingDrivers = [];
+        $this->drivers = self::$registeredDrivers;
     }
 
     /**
@@ -66,24 +63,24 @@ class InferenceDriverFactory
      * @param string|callable(LLMConfig,HttpClient,CanHandleEvents):CanProcessInferenceRequest $driver
      */
     public static function registerDriver(string $name, string|callable $driver) : void {
-        self::$pendingDrivers[$name] = self::toDriverFactory($driver);
+        self::$registeredDrivers[$name] = self::toDriverFactory($driver);
     }
 
     public static function unregisterDriver(string $name): void {
-        unset(self::$pendingDrivers[$name]);
+        unset(self::$registeredDrivers[$name]);
     }
 
     public static function resetDrivers(): void {
-        self::$pendingDrivers = [];
+        self::$registeredDrivers = [];
     }
 
     public static function hasDriver(string $name): bool {
-        return isset(self::$pendingDrivers[$name]);
+        return isset(self::$registeredDrivers[$name]);
     }
 
     /** @return array<string> */
     public static function registeredDrivers(): array {
-        return array_keys(self::$pendingDrivers);
+        return array_keys(self::$registeredDrivers);
     }
 
     /**
@@ -149,7 +146,7 @@ class InferenceDriverFactory
 
     /**
      * Returns factory to create LLM driver instance
-     * @return (callable(LLMConfig, HttpClient, EventDispatcherInterface): CanProcessInferenceRequest)|null
+     * @return (callable(LLMConfig, HttpClient, CanHandleEvents): CanProcessInferenceRequest)|null
      */
     protected function getBundledDriver(string $name) : ?callable {
        return $this->bundledDrivers[$name] ?? null;
