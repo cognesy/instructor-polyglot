@@ -19,13 +19,13 @@ $text = (new Inference())
 
 ## Use a Specific Preset
 
-Presets come from `config/llm.php`.
+Presets come from `config/llm/presets/*.yaml`.
 
 ```php
 <?php
 use Cognesy\Polyglot\Inference\Inference;
 
-$text = Inference::using('anthropic')
+$text = Inference::using('openai')
     ->withMessages('Give me three deployment checklist items.')
     ->get();
 ```
@@ -56,8 +56,8 @@ $stream = (new Inference())
     ->withStreaming()
     ->stream();
 
-foreach ($stream->responses() as $partial) {
-    echo $partial->contentDelta;
+foreach ($stream->deltas() as $delta) {
+    echo $delta->contentDelta;
 }
 ```
 

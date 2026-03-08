@@ -55,7 +55,7 @@ final class InferenceRuntime implements CanCreateInference
         );
     }
 
-    public static function fromResolver(
+    private static function fromResolver(
         CanResolveLLMConfig $resolver,
         ?CanHandleEvents $events = null,
         ?HttpClient $httpClient = null,
@@ -94,32 +94,14 @@ final class InferenceRuntime implements CanCreateInference
         );
     }
 
-    public static function fromDsn(
-        string $dsn,
-        ?CanHandleEvents $events = null,
-        ?HttpClient $httpClient = null,
-        ?CanManageStreamCache $streamCacheManager = null,
-    ): self {
-        return self::fromProvider(
-            provider: LLMProvider::dsn($dsn),
-            events: $events,
-            httpClient: $httpClient,
-            streamCacheManager: $streamCacheManager,
-        );
+    public function onEvent(string $class, callable $listener, int $priority = 0): self {
+        $this->events->addListener($class, $listener, $priority);
+        return $this;
     }
 
-    public static function using(
-        string $preset,
-        ?CanHandleEvents $events = null,
-        ?HttpClient $httpClient = null,
-        ?CanManageStreamCache $streamCacheManager = null,
-    ): self {
-        return self::fromProvider(
-            provider: LLMProvider::using($preset),
-            events: $events,
-            httpClient: $httpClient,
-            streamCacheManager: $streamCacheManager,
-        );
+    public function wiretap(callable $listener): self {
+        $this->events->wiretap($listener);
+        return $this;
     }
 
     private static function resolveHttpClient(

@@ -23,6 +23,10 @@ final class EmbeddingsRuntime implements CanCreateEmbeddings
 
     #[\Override]
     public function create(EmbeddingsRequest $request): PendingEmbeddings {
+        if (!$request->hasInputs()) {
+            throw new \InvalidArgumentException('Input data is required');
+        }
+
         return new PendingEmbeddings(
             request: $request,
             driver: $this->driver,
@@ -43,7 +47,7 @@ final class EmbeddingsRuntime implements CanCreateEmbeddings
         return new self(driver: $driver, events: $events);
     }
 
-    public static function fromResolver(
+    private static function fromResolver(
         CanResolveEmbeddingsConfig $resolver,
         ?CanHandleEvents $events = null,
         ?HttpClient $httpClient = null,
@@ -75,28 +79,14 @@ final class EmbeddingsRuntime implements CanCreateEmbeddings
         );
     }
 
-    public static function fromDsn(
-        string $dsn,
-        ?CanHandleEvents $events = null,
-        ?HttpClient $httpClient = null,
-    ): self {
-        return self::fromProvider(
-            provider: EmbeddingsProvider::dsn($dsn),
-            events: $events,
-            httpClient: $httpClient,
-        );
+    public function onEvent(string $class, callable $listener, int $priority = 0): self {
+        $this->events->addListener($class, $listener, $priority);
+        return $this;
     }
 
-    public static function using(
-        string $preset,
-        ?CanHandleEvents $events = null,
-        ?HttpClient $httpClient = null,
-    ): self {
-        return self::fromProvider(
-            provider: EmbeddingsProvider::using($preset),
-            events: $events,
-            httpClient: $httpClient,
-        );
+    public function wiretap(callable $listener): self {
+        $this->events->wiretap($listener);
+        return $this;
     }
 
     private static function resolveHttpClient(

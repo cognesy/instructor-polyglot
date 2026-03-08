@@ -26,11 +26,9 @@ $config = $provider->resolveConfig();
 
 Common methods:
 
-- `using(...)`, `dsn(...)`, `new(...)`
-- `withLLMPreset(...)`
+- `using(...)`, `fromLLMConfig(...)`, `fromArray(...)`, `new(...)`
 - `withLLMConfig(...)`
 - `withConfigOverrides(...)`
-- `withDsn(...)`
 - `withModel(...)`
 - `withDriver(...)` (explicit inference driver instance)
 
@@ -48,10 +46,8 @@ $config = $provider->resolveConfig();
 
 Common methods:
 
-- `using(...)`, `dsn(...)`, `new(...)`
-- `withPreset(...)`
+- `using(...)`, `fromEmbeddingsConfig(...)`, `fromArray(...)`, `new(...)`
 - `withConfig(...)`
-- `withDsn(...)`
 - `withDriver(...)` (explicit embeddings driver instance)
 
 ## Runtime Assembly
@@ -66,12 +62,9 @@ $runtime = InferenceRuntime::fromProvider($provider);
 Inference runtime factories:
 
 - `fromProvider(...)`
-- `fromResolver(...)`
 - `fromConfig(...)`
-- `using(...)`
-- `fromDsn(...)`
 
-Embeddings runtime provides the same entry points via `EmbeddingsRuntime`.
+Embeddings runtime provides the same public entry points via `EmbeddingsRuntime`.
 
 ## Driver Contracts
 

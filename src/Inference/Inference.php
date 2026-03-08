@@ -2,12 +2,12 @@
 
 namespace Cognesy\Polyglot\Inference;
 
+use Cognesy\Polyglot\Inference\Config\LLMConfig;
 use Cognesy\Polyglot\Inference\Contracts\CanCreateInference;
 use Cognesy\Polyglot\Inference\Creation\InferenceDriverFactory;
 use Cognesy\Polyglot\Inference\Creation\InferenceRequestBuilder;
 use Cognesy\Polyglot\Inference\Data\InferenceRequest;
 use Cognesy\Polyglot\Inference\Data\InferenceResponse;
-use Cognesy\Polyglot\Inference\Enums\OutputMode;
 use Cognesy\Polyglot\Inference\Streaming\InferenceStream;
 
 /**
@@ -29,26 +29,26 @@ final class Inference implements CanCreateInference
         $this->runtime = $runtime ?? InferenceRuntime::fromProvider(LLMProvider::new());
     }
 
-    public static function using(string $preset): self {
-        return new self(InferenceRuntime::using($preset));
+    public static function fromConfig(LLMConfig $config): self {
+        return new self(InferenceRuntime::fromConfig($config));
     }
 
-    public static function fromDsn(string $dsn): self {
-        return new self(InferenceRuntime::fromDsn($dsn));
+    public static function fromProvider(LLMProvider $provider): self {
+        return new self(InferenceRuntime::fromProvider($provider));
     }
 
     public static function fromRuntime(CanCreateInference $runtime): self {
         return new self($runtime);
     }
 
+    public static function using(string $preset, ?string $basePath = null): self {
+        return self::fromConfig(LLMConfig::fromPreset($preset, $basePath));
+    }
+
     public function withRuntime(CanCreateInference $runtime): self {
         $copy = clone $this;
         $copy->runtime = $runtime;
         return $copy;
-    }
-
-    public function runtime(): CanCreateInference {
-        return $this->runtime;
     }
 
     /**
@@ -90,6 +90,14 @@ final class Inference implements CanCreateInference
         return $this->create()->asJsonData();
     }
 
+    public function asToolCallJson(): string {
+        return $this->create()->asToolCallJson();
+    }
+
+    public function asToolCallJsonData(): array {
+        return $this->create()->asToolCallJsonData();
+    }
+
     // INVOCATION //////////////////////////////////////////////////////////
 
     public function with(
@@ -99,7 +107,6 @@ final class Inference implements CanCreateInference
         string|array|null $toolChoice = null,
         ?array       $responseFormat = null,
         ?array       $options = null,
-        ?OutputMode  $mode = null,
     ) : static {
         $copy = $this->cloneWithRequestBuilder();
         $copy->requestBuilder->with(
@@ -109,7 +116,6 @@ final class Inference implements CanCreateInference
             toolChoice: $toolChoice,
             responseFormat: $responseFormat,
             options: $options,
-            mode: $mode,
         );
         return $copy;
     }
