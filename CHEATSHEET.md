@@ -1,3 +1,9 @@
+---
+title: Polyglot
+description: Unified LLM API — inference, embeddings, request building, streaming, and provider configuration
+package: polyglot
+---
+
 # Polyglot Package Cheatsheet
 
 Code-verified API reference for `packages/polyglot`.
@@ -18,20 +24,23 @@ Use a preset for the normal path:
 
 ```php
 use Cognesy\Polyglot\Inference\Inference;
+use Cognesy\Messages\Messages;
 
 $text = Inference::using('openai')
     ->withModel('gpt-4.1-nano')
-    ->withMessages('Say hello in one sentence.')
+    ->withMessages(Messages::fromString('Say hello in one sentence.'))
     ->get();
 ```
 
 Get parsed JSON:
 
 ```php
+use Cognesy\Polyglot\Inference\Data\ResponseFormat;
+
 $data = Inference::using('openai')
     ->withModel('gpt-4.1-nano')
-    ->withResponseFormat(['type' => 'json_object'])
-    ->withMessages('Return JSON with key "ok".')
+    ->withResponseFormat(ResponseFormat::jsonObject())
+    ->withMessages(Messages::fromString('Return JSON with key "ok".'))
     ->asJsonData();
 ```
 
@@ -58,25 +67,29 @@ $inference = $inference->withRuntime(
 ## Inference Request Builder Methods
 
 ```php
+use Cognesy\Messages\Messages;
 use Cognesy\Polyglot\Inference\Config\InferenceRetryPolicy;
+use Cognesy\Polyglot\Inference\Data\ResponseFormat;
+use Cognesy\Polyglot\Inference\Data\ToolChoice;
+use Cognesy\Polyglot\Inference\Data\ToolDefinitions;
 use Cognesy\Polyglot\Inference\Enums\ResponseCachePolicy;
 
 $inference = Inference::using('openai')
-    ->withMessages($messages)
+    ->withMessages($messages)           // Messages
     ->withModel('gpt-4.1-nano')
     ->withMaxTokens(800)
-    ->withTools($tools)
-    ->withToolChoice('auto')
-    ->withResponseFormat($responseFormat)
+    ->withTools($tools)                 // ToolDefinitions
+    ->withToolChoice(ToolChoice::auto())
+    ->withResponseFormat($responseFormat) // ResponseFormat
     ->withOptions(['temperature' => 0])
     ->withStreaming(true)
     ->withResponseCachePolicy(ResponseCachePolicy::Memory)
     ->withRetryPolicy(new InferenceRetryPolicy(maxAttempts: 3))
     ->withCachedContext(
-        messages: $cachedMessages,
-        tools: $cachedTools,
-        toolChoice: 'auto',
-        responseFormat: $cachedResponseFormat,
+        messages: $cachedMessages,       // ?Messages
+        tools: $cachedTools,             // ?ToolDefinitions
+        toolChoice: ToolChoice::auto(),
+        responseFormat: $cachedResponseFormat, // ?ResponseFormat
     );
 ```
 
@@ -84,11 +97,11 @@ Single-call variant:
 
 ```php
 $inference = Inference::using('openai')->with(
-    messages: $messages,
+    messages: $messages,           // ?Messages
     model: 'gpt-4.1-nano',
-    tools: $tools,
-    toolChoice: 'auto',
-    responseFormat: $responseFormat,
+    tools: $tools,                 // ?ToolDefinitions
+    toolChoice: ToolChoice::auto(),
+    responseFormat: $responseFormat, // ?ResponseFormat
     options: ['temperature' => 0],
 );
 ```
@@ -96,10 +109,11 @@ $inference = Inference::using('openai')->with(
 With explicit request:
 
 ```php
+use Cognesy\Messages\Messages;
 use Cognesy\Polyglot\Inference\Data\InferenceRequest;
 
 $request = new InferenceRequest(
-    messages: 'Hello',
+    messages: Messages::fromString('Hello'),
     model: 'gpt-4.1-nano',
 );
 
@@ -286,8 +300,6 @@ $runtime = EmbeddingsRuntime::fromProvider(
 $provider = EmbeddingsProvider::new()
     ->withConfig(EmbeddingsConfig::fromPreset('openai'))
     ->withConfigOverrides(['model' => 'text-embedding-3-small']);
-
-Embeddings::registerDriver('custom', $driverFactory);
 ```
 
 ## Testing
