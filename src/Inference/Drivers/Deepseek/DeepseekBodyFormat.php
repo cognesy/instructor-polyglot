@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cognesy\Polyglot\Inference\Drivers\Deepseek;
 
 use Cognesy\Polyglot\Inference\Data\InferenceRequest;
+use Cognesy\Polyglot\Inference\Data\ResponseFormat;
 use Cognesy\Polyglot\Inference\Drivers\OpenAICompatible\OpenAICompatibleBodyFormat;
 use Cognesy\Polyglot\Inference\Drivers\Support\RequestMessages;
 use Cognesy\Polyglot\Inference\Drivers\Support\RequestPayload;
@@ -26,7 +27,7 @@ class DeepseekBodyFormat extends OpenAICompatibleBodyFormat
             'model' => $model ?: $this->config->model,
             'max_tokens' => $this->config->maxTokens,
             'messages' => $this->messageFormat->map($messages),
-        ]), $options);
+        ], static fn (mixed $value): bool => (bool) $value), $options);
 
         if ($options['stream'] ?? false) {
             $requestBody['stream_options']['include_usage'] = true;
@@ -79,6 +80,14 @@ class DeepseekBodyFormat extends OpenAICompatibleBodyFormat
 
     // INTERNAL ///////////////////////////////////////////////
 
+    /**
+     * Kept as an override for the reasoner guard alone: the reasoner models take no structured
+     * output at all, so they get plain text rather than the mode the caller asked for. The
+     * per-mode shapes live in the hooks below, like every other provider.
+     *
+     * Note this does NOT apply the base's `filterEmptyValues` to the result, which is why it
+     * still overrides rather than calling `parent::`.
+     */
     #[\Override]
     protected function toResponseFormat(InferenceRequest $request): array
     {
@@ -91,11 +100,14 @@ class DeepseekBodyFormat extends OpenAICompatibleBodyFormat
             return [];
         }
 
-        // Deepseek API supports: json_object, text (no schema support)
-        $responseFormat = $request->responseFormat()
-            ->withToJsonObjectHandler(fn () => ['type' => 'json_object'])
-            ->withToJsonSchemaHandler(fn () => ['type' => 'json_object']); // Falls back to json_object
+        return $this->renderResponseFormatForType($request->responseFormat(), $type);
+    }
 
-        return $this->renderResponseFormatForType($responseFormat, $type);
+    // Deepseek API supports json_object and text but no schema, so schema mode degrades to
+    // plain JSON.
+    #[\Override]
+    protected function toJsonSchemaResponseFormat(ResponseFormat $responseFormat): array
+    {
+        return $this->toJsonObjectResponseFormat($responseFormat);
     }
 }

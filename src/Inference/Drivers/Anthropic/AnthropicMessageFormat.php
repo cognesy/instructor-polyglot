@@ -11,7 +11,7 @@ use Cognesy\Messages\Messages;
 use Cognesy\Messages\ToolCall;
 use Cognesy\Messages\Enums\MessageType;
 use Cognesy\Polyglot\Inference\Contracts\CanMapMessages;
-use Cognesy\Polyglot\Inference\Contracts\MessageMapper;
+use Cognesy\Polyglot\Inference\Drivers\MessageMapper;
 use Cognesy\Utils\Str;
 
 class AnthropicMessageFormat implements CanMapMessages
@@ -134,7 +134,7 @@ class AnthropicMessageFormat implements CanMapMessages
                         'id' => $tc->idString(),
                         'name' => $tc->name(),
                         'input' => $tc->arguments(),
-                    ]),
+                    ], static fn (mixed $value): bool => (bool) $value),
                 ),
             ],
         ];
@@ -148,7 +148,7 @@ class AnthropicMessageFormat implements CanMapMessages
                 'type' => 'tool_result',
                 'tool_use_id' => $message->toolResult()->callIdString(),
                 'content' => $message->content()->toString(),
-            ])],
+            ], static fn (mixed $value): bool => (bool) $value)],
         ];
     }
 }

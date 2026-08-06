@@ -114,39 +114,53 @@ $provider = EmbeddingsProvider::fromArray([...])
 
 The `InferenceDriverRegistry` manages the mapping between driver names and their factory callables. Polyglot ships with a default set of bundled drivers via `BundledInferenceDrivers::registry()`.
 
-Supported inference drivers include:
+A registry entry is one of two things, and the difference is worth understanding before you
+write your own:
 
-| Driver Name | Class | Notes |
+- **A spec.** Every bundled provider is an `InferenceDriverSpec` — a row naming its body,
+  request, response, usage and message collaborators. OpenAI-compatible providers use the
+  defaults; native protocols and providers with custom URLs or headers select bespoke adapters
+  in the same row. `SpecifiedInferenceDriver` is the single class behind all of them.
+- **A custom driver class.** Custom registrations may still use a class-string when they need
+  behavior that is not composition. Bundled providers do not need a driver shell for that
+  purpose because their request adapters own provider-specific URL and header behavior.
+
+Supported inference drivers:
+
+| Driver Name | Built from | Notes |
 |---|---|---|
-| `a21` | `A21Driver` | A21 Labs |
-| `anthropic` | `AnthropicDriver` | Anthropic Messages API |
-| `azure` | `AzureDriver` | Azure OpenAI |
-| `bedrock-openai` | `BedrockOpenAIDriver` | AWS Bedrock (OpenAI-compatible) |
-| `cerebras` | `CerebrasDriver` | Cerebras |
-| `cohere` | `CohereV2Driver` | Cohere v2 |
-| `deepseek` | `DeepseekDriver` | DeepSeek |
-| `fireworks` | `FireworksDriver` | Fireworks AI |
-| `gemini` | `GeminiDriver` | Google Gemini native API |
-| `gemini-oai` | `GeminiOAIDriver` | Gemini via OpenAI-compatible endpoint |
-| `glm` | `GlmDriver` | GLM |
-| `groq` | `GroqDriver` | Groq |
-| `huggingface` | `HuggingFaceDriver` | Hugging Face |
-| `inception` | `InceptionDriver` | Inception |
-| `meta` | `MetaDriver` | Meta Llama API |
-| `minimaxi` | `MinimaxiDriver` | Minimaxi |
-| `mistral` | `MistralDriver` | Mistral |
-| `openai` | `OpenAIDriver` | OpenAI Chat Completions API |
-| `openai-responses` | `OpenAIResponsesDriver` | OpenAI Responses API |
-| `openresponses` | `OpenResponsesDriver` | Open Responses API |
-| `openrouter` | `OpenRouterDriver` | OpenRouter |
-| `perplexity` | `PerplexityDriver` | Perplexity |
-| `qwen` | `QwenDriver` | Alibaba Qwen |
-| `sambanova` | `SambaNovaDriver` | SambaNova |
-| `xai` | `XAiDriver` | xAI (Grok) |
-| `moonshot` | `OpenAICompatibleDriver` | Moonshot (via OpenAI-compatible) |
-| `ollama` | `OpenAICompatibleDriver` | Ollama (via OpenAI-compatible) |
-| `openai-compatible` | `OpenAICompatibleDriver` | Generic OpenAI-compatible APIs |
-| `together` | `OpenAICompatibleDriver` | Together AI (via OpenAI-compatible) |
+| `a21` | spec: `A21BodyFormat` | A21 Labs |
+| `anthropic` | spec: `AnthropicBodyFormat` + `AnthropicRequestAdapter` | Anthropic Messages API |
+| `azure` | spec: `OpenAIBodyFormat` + `AzureOpenAIRequestAdapter` | Azure OpenAI |
+| `bedrock-openai` | spec: `OpenAICompatibleBodyFormat` + `BedrockOpenAIRequestAdapter` | AWS Bedrock (OpenAI-compatible) |
+| `cerebras` | spec: `CerebrasBodyFormat` | Cerebras |
+| `cohere` | spec: `CohereV2BodyFormat` + `CohereV2RequestAdapter` | Cohere v2 |
+| `deepseek` | spec: `DeepseekBodyFormat` | DeepSeek; the one provider whose capabilities depend on the model |
+| `fireworks` | spec: `FireworksBodyFormat` | Fireworks AI |
+| `gemini` | spec: `GeminiBodyFormat` + `GeminiRequestAdapter` | Google Gemini native API |
+| `gemini-oai` | spec: `GeminiOAIBodyFormat` + `GeminiOAIRequestAdapter` | Gemini via OpenAI-compatible endpoint |
+| `glm` | spec: `GlmBodyFormat` | GLM |
+| `groq` | spec: `GroqBodyFormat` | Groq |
+| `huggingface` | spec: `HuggingFaceBodyFormat` + `HuggingFaceRequestAdapter` | Hugging Face |
+| `inception` | spec: `InceptionBodyFormat` | Inception |
+| `meta` | spec: `MetaBodyFormat` | Meta Llama API |
+| `minimaxi` | spec: `MinimaxiBodyFormat` | Minimaxi |
+| `mistral` | spec: `MistralBodyFormat` | Mistral |
+| `openai` | spec: `OpenAIBodyFormat` | OpenAI Chat Completions API |
+| `openai-responses` | spec: `OpenResponsesBodyFormat` + `OpenAIResponsesRequestAdapter` | OpenAI Responses API |
+| `openresponses` | spec: `OpenResponsesBodyFormat` + `OpenResponsesRequestAdapter` | Open Responses API |
+| `openrouter` | spec: `OpenRouterBodyFormat` | OpenRouter |
+| `perplexity` | spec: `PerplexityBodyFormat` | Perplexity |
+| `qwen` | spec: `QwenBodyFormat` | Alibaba Qwen |
+| `sambanova` | spec: `SambaNovaBodyFormat` | SambaNova |
+| `xai` | spec: `OpenAICompatibleBodyFormat` + `XAiMessageFormat` | xAI (Grok) |
+| `moonshot` | spec: `OpenAICompatibleBodyFormat` | Moonshot (via OpenAI-compatible) |
+| `ollama` | spec: `OpenAICompatibleBodyFormat` | Ollama (via OpenAI-compatible) |
+| `openai-compatible` | spec: `OpenAICompatibleBodyFormat` | Generic OpenAI-compatible APIs |
+| `together` | spec: `OpenAICompatibleBodyFormat` | Together AI (via OpenAI-compatible) |
+
+The last four names share a single spec object: they are the same provider behaviour under
+four names, and the requests they emit are asserted byte-identical.
 
 You can extend the registry with custom drivers:
 
@@ -219,7 +233,7 @@ The provider system is built on a small set of interfaces:
 | Interface | Purpose |
 |---|---|
 | `CanProcessInferenceRequest` | Main inference driver contract (make responses, stream deltas, report capabilities) |
-| `CanHandleVectorization` | Main embeddings driver contract (handle requests, parse responses) |
+| `CanHandleVectorization` | Main embeddings driver contract; returns a normalized `EmbeddingsResponse` |
 | `CanProvideInferenceDrivers` | Registry that creates inference drivers by name |
 
 ### Adapter Contracts
