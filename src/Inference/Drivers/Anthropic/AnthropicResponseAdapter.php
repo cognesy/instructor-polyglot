@@ -11,11 +11,13 @@ use Cognesy\Polyglot\Inference\Data\PartialInferenceDelta;
 use Cognesy\Messages\ToolCallId;
 use Cognesy\Polyglot\Inference\Data\ToolCallIdByStreamIndex;
 use Cognesy\Messages\ToolCall;
-use JsonException;
+use Cognesy\Polyglot\Inference\Drivers\Support\DecodesJsonPayload;
 use RuntimeException;
 
 class AnthropicResponseAdapter implements CanTranslateInferenceResponse
 {
+    use DecodesJsonPayload;
+
     public function __construct(
         protected CanMapUsage $usageFormat,
     ) {}
@@ -181,10 +183,37 @@ class AnthropicResponseAdapter implements CanTranslateInferenceResponse
         }
 
         $toolCallId = $toolIdByIndex->forIndex($blockIndex);
-        return match ($toolCallId) {
-            null => '',
-            default => $toolCallId->toString(),
-        };
+        if ($toolCallId !== null) {
+            return $toolCallId->toString();
+        }
+
+        // No id from the wire and nothing remembered for this block. OpenAI and Gemini
+        // both synthesise a stable id from the wire index here; Anthropic used to return
+        // '' and leave InferenceStreamState to guess.
+        //
+        // The synthetic id is deliberately NOT minted for every event: resolveToolId()
+        // runs on all of them, and a non-empty toolId is by itself enough to make
+        // InferenceStreamState::hasToolDelta() true -- so minting one unconditionally
+        // would start a phantom tool call for every text delta in the stream.
+        if (!$this->isToolBlockEvent($data)) {
+            return '';
+        }
+
+        $synthetic = 'idx:' . $blockIndex;
+        $toolIdByIndex->remember($blockIndex, ToolCallId::fromString($synthetic));
+        return $synthetic;
+    }
+
+    /**
+     * True when the event carries tool-call payload: a `tool_use` block start, a block
+     * carrying a tool name, or an arguments fragment.
+     *
+     * @param array<string,mixed> $data
+     */
+    private function isToolBlockEvent(array $data): bool {
+        return ($data['content_block']['type'] ?? '') === 'tool_use'
+            || ($data['content_block']['name'] ?? '') !== ''
+            || isset($data['delta']['partial_json']);
     }
 
     /**
@@ -197,23 +226,6 @@ class AnthropicResponseAdapter implements CanTranslateInferenceResponse
         }
 
         return $data;
-    }
-
-    /**
-     * @return array<string,mixed>
-     */
-    private function decodeJsonData(string $payload, string $context): array {
-        try {
-            $decoded = json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new RuntimeException($context . ' is not valid JSON.', previous: $e);
-        }
-
-        if (!is_array($decoded)) {
-            throw new RuntimeException($context . ' must decode to an object or array.');
-        }
-
-        return $decoded;
     }
 
     /**
