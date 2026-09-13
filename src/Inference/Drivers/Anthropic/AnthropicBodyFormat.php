@@ -11,6 +11,7 @@ use Cognesy\Polyglot\Inference\Contracts\CanMapMessages;
 use Cognesy\Polyglot\Inference\Contracts\CanMapRequestBody;
 use Cognesy\Polyglot\Inference\Data\InferenceRequest;
 use Cognesy\Polyglot\Inference\Data\ToolDefinition;
+use InvalidArgumentException;
 
 class AnthropicBodyFormat implements CanMapRequestBody
 {
@@ -23,6 +24,9 @@ class AnthropicBodyFormat implements CanMapRequestBody
     #[\Override]
     public function toRequestBody(InferenceRequest $request): array
     {
+        if ($request->hasNonTextResponseFormat()) {
+            throw new InvalidArgumentException('Anthropic cannot render a non-text response format.');
+        }
         $options = array_merge($this->config->options, $request->options());
 
         $parallelToolCalls = (bool) ($options['parallel_tool_calls'] ?? $this->defaultParallelToolCalls);
@@ -36,9 +40,6 @@ class AnthropicBodyFormat implements CanMapRequestBody
             'system' => $this->toSystemMessages($request),
             'messages' => $this->toMessages($request),
         ], static fn (mixed $value): bool => (bool) $value), $options);
-
-        // Anthropic does not support response_format or JSON/JSON Schema mode
-        unset($requestBody['response_format']);
 
         if ($request->hasTools()) {
             $requestBody['tools'] = $this->toTools($request);
@@ -63,7 +64,7 @@ class AnthropicBodyFormat implements CanMapRequestBody
         $count = count($result);
         if ($count > 0) {
             // set cache marker on last tool entry
-            $result[$count - 1]['cache_control'] = ['type' => 'ephemeral'];
+            $result[$count - 1]['cache_control'] = AnthropicCache::control($request->cachedContext()?->ttl());
         }
 
         foreach ($tools->all() as $tool) {
@@ -121,16 +122,15 @@ class AnthropicBodyFormat implements CanMapRequestBody
     {
         $cachedMessages = $request->cachedContext()?->messages() ?? Messages::empty();
 
-        $systemCached = $this->markCachedMessages(
-            $cachedMessages->headWithRoles([MessageRole::System, MessageRole::Developer])
+        $systemCached = AnthropicCache::markBlocks(
+            $this->toSystemEntries($cachedMessages->headWithRoles([MessageRole::System, MessageRole::Developer])),
+            $request->cachedContext()?->ttl(),
         );
 
         $systemMessages = $request->messages()
             ->headWithRoles([MessageRole::System, MessageRole::Developer]);
 
-        $messages = $systemCached->appendMessages($systemMessages);
-
-        return $this->toSystemEntries($messages);
+        return [...$systemCached, ...$this->toSystemEntries($systemMessages)];
     }
 
     protected function toSystemEntries(
@@ -139,15 +139,14 @@ class AnthropicBodyFormat implements CanMapRequestBody
         $textFragments = [];
         foreach ($messages->messageList()->all() as $message) {
             foreach ($message->content()->partsList()->all() as $contentPart) {
-                // TODO: what about non-text content - e.g. images? caching should support them too
-                if (! $contentPart->hasText() || $contentPart->isEmpty()) {
+                if (! $contentPart->hasText() || trim($contentPart->toString()) === '') {
                     continue;
                 }
                 $textFragments[] = match (true) {
                     $contentPart->has('cache_control') => [
                         'type' => 'text',
                         'text' => $contentPart->toString(),
-                        'cache_control' => ['type' => 'ephemeral'],
+                        'cache_control' => $contentPart->get('cache_control'),
                     ],
                     default => [
                         'type' => 'text',
@@ -164,38 +163,14 @@ class AnthropicBodyFormat implements CanMapRequestBody
     {
         $cachedMessages = $request->cachedContext()?->messages() ?? Messages::empty();
 
-        $postSystemCached = $this->markCachedMessages(
-            $cachedMessages->tailAfterRoles([MessageRole::System, MessageRole::Developer])
+        $postSystemCached = AnthropicCache::markMessages(
+            $this->messageFormat->map($cachedMessages->tailAfterRoles([MessageRole::System, MessageRole::Developer])),
+            $request->cachedContext()?->ttl(),
         );
 
         $postSystemMessages = $request->messages()
             ->tailAfterRoles([MessageRole::System, MessageRole::Developer]);
 
-        $messages = $postSystemCached
-            ->appendMessages($postSystemMessages);
-
-        return $this->messageFormat->map($messages);
-    }
-
-    private function markCachedMessages(Messages $messages): Messages
-    {
-        if ($messages->isEmpty()) {
-            return $messages;
-        }
-        $list = $messages->messageList()->all();
-        $targetIndex = count($list) > 0 ? count($list) - 1 : null;
-        if ($targetIndex === null) {
-            return $messages;
-        }
-        $marked = Messages::empty();
-        foreach ($list as $index => $message) {
-            if ($index === $targetIndex) {
-                $content = $message->content()->appendContentField('cache_control', ['type' => 'ephemeral']);
-                $message = $message->withContent($content);
-            }
-            $marked = $marked->appendMessage($message);
-        }
-
-        return $marked;
+        return [...$postSystemCached, ...$this->messageFormat->map($postSystemMessages)];
     }
 }

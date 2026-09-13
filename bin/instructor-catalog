@@ -1,0 +1,186 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+use Cognesy\Polyglot\Inference\Models\ModelCatalog;
+use Cognesy\Polyglot\Inference\Models\ModelRecordDirectory;
+use Symfony\Component\Yaml\Yaml;
+
+$autoloaders = [__DIR__ . '/../../../vendor/autoload.php', __DIR__ . '/../vendor/autoload.php'];
+foreach ($autoloaders as $autoloader) {
+    if (is_file($autoloader)) {
+        require_once $autoloader;
+        break;
+    }
+}
+if (!class_exists(ModelCatalog::class)) {
+    fwrite(STDERR, "Unable to load Polyglot classes. Run composer install first.\n");
+    exit(1);
+}
+
+$command = $argv[1] ?? 'check';
+try {
+    $paths = catalogPaths(parseOptions(array_slice($argv, 2)));
+    $status = match ($command) {
+        'build' => buildCatalog($paths),
+        'check' => checkCatalog($paths),
+        'validate' => validateCatalog($paths),
+        default => usage($command),
+    };
+} catch (Throwable $error) {
+    fwrite(STDERR, $error->getMessage() . "\n");
+    $status = 1;
+}
+exit($status);
+
+/** @return array<string, string> */
+function parseOptions(array $arguments): array {
+    $options = [];
+    foreach ($arguments as $argument) {
+        if (!str_starts_with($argument, '--')) {
+            throw new InvalidArgumentException("Unexpected argument: {$argument}");
+        }
+        [$name, $value] = array_pad(explode('=', substr($argument, 2), 2), 2, null);
+        if (!in_array($name, ['source', 'overrides', 'target'], true) || $value === null || $value === '') {
+            throw new InvalidArgumentException("Unknown or invalid option: {$argument}");
+        }
+        if (isset($options[$name])) {
+            throw new InvalidArgumentException("Duplicate option: --{$name}");
+        }
+        $options[$name] = $value;
+    }
+
+    return $options;
+}
+
+/** @param array<string, string> $options @return array<string, string> */
+function catalogPaths(array $options): array {
+    $catalog = __DIR__ . '/../resources/catalog';
+
+    return [
+        'source' => $options['source'] ?? $catalog . '/models-source.json',
+        'overrides' => $options['overrides'] ?? $catalog . '/models-overrides.json',
+        'target' => $options['target'] ?? __DIR__ . '/../resources/config/llm/models',
+    ];
+}
+
+/** @param array<string, string> $paths */
+function buildCatalog(array $paths): int {
+    writeCatalogRecords($paths['target'], compiledCatalog($paths['source'], $paths['overrides']));
+    fwrite(STDOUT, "Built {$paths['target']}\n");
+
+    return 0;
+}
+
+/** @param array<string, string> $paths */
+function checkCatalog(array $paths): int {
+    $compiled = compiledCatalog($paths['source'], $paths['overrides']);
+    if (catalogRecordsMatch($paths['target'], $compiled)) {
+        fwrite(STDOUT, "Catalog is current.\n");
+
+        return 0;
+    }
+    fwrite(STDERR, "Catalog is stale. Run instructor-catalog build.\n");
+
+    return 1;
+}
+
+/** @param array<string, string> $paths */
+function validateCatalog(array $paths): int {
+    $expected = compiledCatalog($paths['source'], $paths['overrides']);
+    $actual = ModelCatalog::fromPaths($paths['target']);
+    if (catalogRecordFiles($actual) !== catalogRecordFiles($expected)) {
+        throw new InvalidArgumentException('Compiled catalog does not match its source and overrides.');
+    }
+    fwrite(STDOUT, "Catalog contains {$actual->count()} offerings.\n");
+
+    return 0;
+}
+
+function compiledCatalog(string $sourcePath, string $overridesPath): ModelCatalog {
+    $source = ModelCatalog::fromFile($sourcePath);
+    $overrides = ModelCatalog::fromFile($overridesPath);
+    $data = $source->overlay($overrides)->toArray();
+    $data['version'] = $source->version;
+
+    return ModelCatalog::fromArray($data);
+}
+
+/** @return array<string, string> */
+function catalogRecordFiles(ModelCatalog $catalog): array {
+    $files = [];
+    foreach ($catalog as $profile) {
+        if ($profile->catalogVersion === '') {
+            throw new InvalidArgumentException('Generated model records require a non-empty version.');
+        }
+        $files[ModelRecordDirectory::relativePath($profile->key)] = Yaml::dump([
+            'schemaVersion' => 1,
+            'version' => $profile->catalogVersion,
+            'profile' => $profile->toArray(),
+        ], 12, 2);
+    }
+    ksort($files, SORT_STRING);
+
+    return $files;
+}
+
+function catalogRecordsMatch(string $directory, ModelCatalog $catalog): bool {
+    $expected = catalogRecordFiles($catalog);
+    $actual = glob(rtrim($directory, '/\\') . '/*/*.yaml') ?: [];
+    if (count($expected) !== count($actual)) {
+        return false;
+    }
+    foreach ($expected as $relative => $contents) {
+        $path = $directory . '/' . $relative;
+        if (!is_file($path) || file_get_contents($path) !== $contents) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function writeCatalogRecords(string $directory, ModelCatalog $catalog): void {
+    $files = catalogRecordFiles($catalog);
+    $existing = glob(rtrim($directory, '/\\') . '/*/*.yaml') ?: [];
+    ensureDirectory($directory);
+    foreach ($files as $relative => $contents) {
+        writeAtomically($directory . '/' . $relative, $contents);
+    }
+    foreach ($existing as $path) {
+        $relative = substr($path, strlen(rtrim($directory, '/\\')) + 1);
+        if (!array_key_exists($relative, $files) && !unlink($path)) {
+            throw new RuntimeException("Unable to remove obsolete generated model record: {$path}");
+        }
+    }
+}
+
+function writeAtomically(string $path, string $contents): void {
+    ensureDirectory(dirname($path));
+    $temporary = tempnam(dirname($path), '.instructor-catalog-');
+    if ($temporary === false || file_put_contents($temporary, $contents) === false) {
+        throw new RuntimeException("Unable to stage catalog write: {$path}");
+    }
+    if (!chmod($temporary, 0644)) {
+        unlink($temporary);
+        throw new RuntimeException("Unable to set readable catalog permissions: {$path}");
+    }
+    if (!rename($temporary, $path)) {
+        unlink($temporary);
+        throw new RuntimeException("Unable to atomically replace catalog: {$path}");
+    }
+}
+
+function ensureDirectory(string $path): void {
+    if (is_dir($path)) {
+        return;
+    }
+    if (!mkdir($path, 0777, true) && !is_dir($path)) {
+        throw new RuntimeException("Unable to create directory: {$path}");
+    }
+}
+
+function usage(string $command): int {
+    fwrite(STDERR, "Unknown command '{$command}'. Use build, check, or validate.\n");
+
+    return 2;
+}

@@ -147,16 +147,28 @@ Provider support for JSON Schema varies significantly:
 | Provider | JSON Schema Support |
 |---|---|
 | OpenAI (GPT-4 and newer) | Full native support with strict mode |
-| Groq, Fireworks, and others | Varies -- check `DriverCapabilities` |
+| Groq, Fireworks, and others | Varies -- check the exact `ModelCatalog` offering |
 | Anthropic | Not supported natively |
 
 You can query support programmatically:
 
 ```php
-// DriverCapabilities::supportsResponseFormatJsonSchema()
+$status = ModelCatalog::discover()
+    ->find($driver, $model)
+    ->capabilities
+    ->jsonSchema;
 ```
 
-For providers without native JSON Schema support, consider using [JSON object mode](/modes/json) with detailed prompts, or use the Instructor layer above Polyglot for automatic fallback strategies.
+The catalog is optional; ordinary inference does not look up this status. When an exact catalog
+record is composed into the runtime, an explicit `unsupported` fact rejects the request locally
+and an unknown fact makes no assertion.
+
+Polyglot never silently removes `response_format`. JSON Schema can be changed to
+[JSON object mode](/modes/json) only when the exact record supports JSON Object and the caller has
+set `allowLossyFallback: true` on `LLMConfig` (`allow_lossy_fallback` in framework connection
+configuration). The adjustment is recorded on the effective request and emitted with
+`InferenceRequested`. Otherwise the request fails explicitly; the Instructor layer can provide
+higher-level retry and extraction strategies when that is the intended behavior.
 
 ## When to Use JSON Schema Mode
 

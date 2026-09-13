@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Cognesy\Polyglot\Inference\Reasoning;
 
+use Cognesy\Polyglot\Inference\Models\ModelRecordFields;
 use InvalidArgumentException;
 
 /** Inclusive provider reasoning-token budget range. */
@@ -18,9 +19,28 @@ final readonly class ReasoningBudgetRange
         }
     }
 
-    public function contains(int $budgetTokens): bool
-    {
+    public function contains(int $budgetTokens): bool {
         return $budgetTokens >= $this->minimum
             && ($this->maximum === null || $budgetTokens <= $this->maximum);
+    }
+
+    public static function fromArray(array $data): self {
+        ModelRecordFields::validate($data, ['min', 'max'], 'reasoning.budget', ['max']);
+        $minimum = $data['min'] ?? null;
+        $maximum = $data['max'] ?? null;
+        if (!is_int($minimum) || ($maximum !== null && !is_int($maximum))) {
+            throw new InvalidArgumentException('Reasoning budget requires integer min and optional max.');
+        }
+
+        return new self($minimum, $maximum);
+    }
+
+    /** @return array{min: int, max?: int} */
+    public function toArray(): array {
+        if ($this->maximum === null) {
+            return ['min' => $this->minimum];
+        }
+
+        return ['min' => $this->minimum, 'max' => $this->maximum];
     }
 }

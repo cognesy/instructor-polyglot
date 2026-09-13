@@ -7,6 +7,8 @@ namespace Cognesy\Polyglot\Inference\Data;
 use Cognesy\Messages\Messages;
 use Cognesy\Polyglot\Inference\Config\InferenceRetryPolicy;
 use Cognesy\Polyglot\Inference\Enums\ResponseCachePolicy;
+use Cognesy\Polyglot\Inference\Models\ModelProfile;
+use Cognesy\Polyglot\Inference\Reasoning\ReasoningCapabilities;
 use Cognesy\Polyglot\Inference\Reasoning\ReasoningSelection;
 use Cognesy\Telemetry\Domain\Envelope\OperationCorrelation;
 use DateTimeImmutable;
@@ -47,6 +49,12 @@ class InferenceRequest
 
     protected ?ReasoningSelection $reasoning;
 
+    protected ?ModelProfile $modelProfile;
+
+    protected ?InferenceRequestAdjustments $adjustments;
+
+    protected ?ReasoningCapabilities $reasoningCapabilities;
+
     public function __construct(
         ?Messages $messages = null,
         ?string $model = null,
@@ -59,10 +67,13 @@ class InferenceRequest
         ?InferenceRetryPolicy $retryPolicy = null,
         ?OperationCorrelation $telemetryCorrelation = null,
         ?ReasoningSelection $reasoning = null,
+        ?ModelProfile $modelProfile = null,
         //
         ?InferenceRequestId $id = null, // for deserialization
         ?DateTimeImmutable $createdAt = null, // for deserialization
         ?DateTimeImmutable $updatedAt = null, // for deserialization
+        ?InferenceRequestAdjustments $adjustments = null,
+        ?ReasoningCapabilities $reasoningCapabilities = null,
     ) {
         $this->id = $id ?? InferenceRequestId::generate();
         $this->createdAt = $createdAt ?? new DateTimeImmutable;
@@ -76,6 +87,9 @@ class InferenceRequest
         $this->retryPolicy = $retryPolicy;
         $this->telemetryCorrelation = $telemetryCorrelation;
         $this->reasoning = $reasoning;
+        $this->modelProfile = $modelProfile;
+        $this->adjustments = $adjustments;
+        $this->reasoningCapabilities = $reasoningCapabilities;
 
         $this->tools = $tools ?? ToolDefinitions::empty();
         $this->toolChoice = $toolChoice ?? ToolChoice::empty();
@@ -99,6 +113,16 @@ class InferenceRequest
     public function model(): string
     {
         return $this->model;
+    }
+
+    public function modelProfile(): ?ModelProfile
+    {
+        return $this->modelProfile;
+    }
+
+    public function adjustments(): InferenceRequestAdjustments
+    {
+        return $this->adjustments ?? InferenceRequestAdjustments::empty();
     }
 
     /**
@@ -169,6 +193,11 @@ class InferenceRequest
     public function reasoning(): ReasoningSelection
     {
         return $this->reasoning ?? ReasoningSelection::providerDefault();
+    }
+
+    public function reasoningCapabilities(): ?ReasoningCapabilities
+    {
+        return $this->reasoningCapabilities ?? $this->modelProfile?->capabilities->reasoning;
     }
 
     /**
@@ -248,11 +277,6 @@ class InferenceRequest
         return ! empty($this->options);
     }
 
-    public function hasReasoning(): bool
-    {
-        return ! $this->reasoning()->isDefault();
-    }
-
     // MUTATORS //////////////////////////////////////
 
     /**
@@ -272,6 +296,9 @@ class InferenceRequest
         ?InferenceRetryPolicy $retryPolicy = null,
         ?OperationCorrelation $telemetryCorrelation = null,
         ?ReasoningSelection $reasoning = null,
+        ?ModelProfile $modelProfile = null,
+        ?InferenceRequestAdjustments $adjustments = null,
+        ?ReasoningCapabilities $reasoningCapabilities = null,
     ): self {
         return new self(
             messages: $messages ?? $this->messages,
@@ -285,6 +312,9 @@ class InferenceRequest
             retryPolicy: $retryPolicy ?? $this->retryPolicy,
             telemetryCorrelation: $telemetryCorrelation ?? $this->telemetryCorrelation,
             reasoning: $reasoning ?? $this->reasoning,
+            modelProfile: $modelProfile ?? $this->modelProfile,
+            adjustments: $adjustments ?? $this->adjustments,
+            reasoningCapabilities: $reasoningCapabilities ?? $this->reasoningCapabilities,
             id: $this->id,
             createdAt: $this->createdAt,
             // Carried over, not recomputed: with() runs per attempt via
@@ -303,6 +333,16 @@ class InferenceRequest
     public function withModel(string $model): self
     {
         return $this->with(model: $model);
+    }
+
+    public function withModelProfile(ModelProfile $modelProfile): self
+    {
+        return $this->with(modelProfile: $modelProfile);
+    }
+
+    public function withAdjustment(InferenceRequestAdjustment $adjustment): self
+    {
+        return $this->with(adjustments: $this->adjustments()->with($adjustment));
     }
 
     public function withStreaming(bool $streaming): self
@@ -362,6 +402,11 @@ class InferenceRequest
         return $this->with(reasoning: $reasoning);
     }
 
+    public function withReasoningCapabilities(ReasoningCapabilities $capabilities): self
+    {
+        return $this->with(reasoningCapabilities: $capabilities);
+    }
+
     /**
      * Returns a copy of the current object with cached context applied if it is available.
      * If no cached context is set, it returns the current instance unchanged.
@@ -388,6 +433,9 @@ class InferenceRequest
             retryPolicy: $this->retryPolicy,
             telemetryCorrelation: $this->telemetryCorrelation,
             reasoning: $this->reasoning,
+            modelProfile: $this->modelProfile,
+            adjustments: $this->adjustments,
+            reasoningCapabilities: $this->reasoningCapabilities,
             id: $this->id,
             createdAt: $this->createdAt,
         );

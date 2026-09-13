@@ -9,7 +9,7 @@
         "type": "json_object"
     },
     "a21/json_schema": {
-        "type": "json_object"
+        "error": "AI21 cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
     },
     "cerebras/text": {
         "type": "text"
@@ -162,7 +162,7 @@
         "type": "json_object"
     },
     "deepseek/json_schema": {
-        "type": "json_object"
+        "error": "DeepSeek cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
     },
     "fireworks/text": {
         "type": "text"
@@ -221,7 +221,7 @@
         "type": "json_object"
     },
     "gemini-oai/json_schema": {
-        "type": "json_object"
+        "error": "Gemini OpenAI-compatible API cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
     },
     "glm/text": {
         "type": "text"
@@ -336,40 +336,44 @@
     },
     "huggingface/json_schema": {
         "type": "json_schema",
-        "value": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "age": {
-                    "type": "integer",
-                    "nullable": true
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
+        "json_schema": {
+            "name": "user",
+            "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "name": {
                         "type": "string"
+                    },
+                    "age": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "role": {
+                        "$ref": "#/$defs/Role"
                     }
                 },
-                "role": {
-                    "$ref": "#/$defs/Role"
-                }
-            },
-            "required": [
-                "name"
-            ],
-            "$defs": {
-                "Role": {
-                    "type": "object",
-                    "properties": {
-                        "level": {
-                            "type": "integer"
+                "required": [
+                    "name"
+                ],
+                "$defs": {
+                    "Role": {
+                        "type": "object",
+                        "properties": {
+                            "level": {
+                                "type": "integer"
+                            }
                         }
                     }
                 }
-            }
+            },
+            "strict": false
         }
     },
     "inception/text": {
@@ -529,86 +533,10 @@
         }
     },
     "minimaxi/json_object_with_schema": {
-        "type": "json_schema",
-        "json_schema": {
-            "name": "user",
-            "schema": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "age": {
-                        "type": "number",
-                        "nullable": true
-                    },
-                    "tags": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "role": {
-                        "$ref": "#/$defs/Role"
-                    }
-                },
-                "required": [
-                    "name"
-                ],
-                "$defs": {
-                    "Role": {
-                        "type": "object",
-                        "properties": {
-                            "level": {
-                                "type": "number"
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        "error": "MiniMax cannot render integer schema types without changing them to number."
     },
     "minimaxi/json_schema": {
-        "type": "json_schema",
-        "json_schema": {
-            "name": "user",
-            "schema": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "age": {
-                        "type": "number",
-                        "nullable": true
-                    },
-                    "tags": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "role": {
-                        "$ref": "#/$defs/Role"
-                    }
-                },
-                "required": [
-                    "name"
-                ],
-                "$defs": {
-                    "Role": {
-                        "type": "object",
-                        "properties": {
-                            "level": {
-                                "type": "number"
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        "error": "MiniMax cannot render integer schema types without changing them to number."
     },
     "mistral/text": {
         "type": "text"
@@ -913,7 +841,46 @@
         "type": "json_object"
     },
     "qwen/json_schema": {
-        "type": "json_object"
+        "type": "json_schema",
+        "json_schema": {
+            "name": "user",
+            "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "role": {
+                        "$ref": "#/$defs/Role"
+                    }
+                },
+                "required": [
+                    "name"
+                ],
+                "$defs": {
+                    "Role": {
+                        "type": "object",
+                        "properties": {
+                            "level": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            },
+            "strict": false
+        }
     },
     "sambanova/text": {
         "type": "text"
@@ -925,6 +892,6 @@
         "type": "json_object"
     },
     "sambanova/json_schema": {
-        "type": "json_object"
+        "error": "SambaNova cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
     }
 }

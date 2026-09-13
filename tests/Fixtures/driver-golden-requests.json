@@ -1,179 +1,31 @@
 {
     "a21": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "response_format": {
-                    "type": "json_object"
-                },
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "AI21 cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "tools_and_schema_streamed": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": true,
-                "max_completion_tokens": 1024,
-                "stream_options": {
-                    "include_usage": true
-                },
-                "response_format": {
-                    "type": "json_object"
-                },
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": true
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "AI21 cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "schema_only": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "response_format": {
-                    "type": "json_object"
-                }
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "AI21 cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -206,7 +58,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -238,7 +91,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -289,7 +143,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -387,7 +242,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -423,214 +279,46 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "anthropic": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": false,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": false,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": false,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "x-api-key": "test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "accept": "application/json",
-                "anthropic-version": "2024-01-01"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "system": [
-                    {
-                        "type": "text",
-                        "text": "You are terse."
-                    }
-                ],
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "tools": [
-                    {
-                        "name": "get_weather",
-                        "description": "Get the weather",
-                        "input_schema": {
-                            "type": "object",
-                            "properties": {
-                                "city": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": [
-                                "city"
-                            ],
-                            "additionalProperties": false
-                        }
-                    }
-                ],
-                "tool_choice": {
-                    "type": "auto",
-                    "disable_parallel_tool_use": true
-                }
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Anthropic cannot render a non-text response format."
         },
         "tools_and_schema_streamed": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "x-api-key": "test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "accept": "application/json",
-                "anthropic-version": "2024-01-01"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "system": [
-                    {
-                        "type": "text",
-                        "text": "You are terse."
-                    }
-                ],
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": true,
-                "tools": [
-                    {
-                        "name": "get_weather",
-                        "description": "Get the weather",
-                        "input_schema": {
-                            "type": "object",
-                            "properties": {
-                                "city": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": [
-                                "city"
-                            ],
-                            "additionalProperties": false
-                        }
-                    }
-                ],
-                "tool_choice": {
-                    "type": "auto",
-                    "disable_parallel_tool_use": true
-                }
-            },
-            "method": "POST",
-            "options": {
-                "stream": true
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Anthropic cannot render a non-text response format."
         },
         "schema_only": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "x-api-key": "test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "accept": "application/json",
-                "anthropic-version": "2024-01-01"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "system": [
-                    {
-                        "type": "text",
-                        "text": "You are terse."
-                    }
-                ],
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Anthropic cannot render a non-text response format."
         },
         "json_object": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "x-api-key": "test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "accept": "application/json",
-                "anthropic-version": "2024-01-01"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "system": [
-                    {
-                        "type": "text",
-                        "text": "You are terse."
-                    }
-                ],
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "thinking": true
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Anthropic cannot render a non-text response format."
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -662,7 +350,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -716,7 +405,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -820,7 +510,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -859,42 +550,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "azure": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions?api-version=2024-01-01",
             "headers": {
@@ -972,7 +632,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions?api-version=2024-01-01",
@@ -1054,7 +715,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions?api-version=2024-01-01",
@@ -1111,7 +773,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions?api-version=2024-01-01",
@@ -1143,7 +806,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions?api-version=2024-01-01",
@@ -1174,7 +838,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions?api-version=2024-01-01",
@@ -1224,7 +889,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions?api-version=2024-01-01",
@@ -1321,7 +987,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions?api-version=2024-01-01",
@@ -1356,42 +1023,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "bedrock-openai": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1/chat/completions",
             "headers": {
@@ -1470,7 +1106,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1/chat/completions",
@@ -1553,7 +1190,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1/chat/completions",
@@ -1611,7 +1249,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1/chat/completions",
@@ -1644,7 +1283,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1/chat/completions",
@@ -1676,7 +1316,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1/chat/completions",
@@ -1727,7 +1368,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1/chat/completions",
@@ -1825,7 +1467,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1/chat/completions",
@@ -1861,42 +1504,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "cerebras": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -1919,6 +1531,35 @@
                 "temperature": 0,
                 "stream": false,
                 "max_completion_tokens": -1,
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
+                },
                 "tools": [
                     {
                         "type": "function",
@@ -1946,7 +1587,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -1972,6 +1614,35 @@
                 "max_completion_tokens": -1,
                 "stream_options": {
                     "include_usage": true
+                },
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
                 },
                 "tools": [
                     {
@@ -2000,7 +1671,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2058,7 +1730,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2091,7 +1764,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2123,7 +1797,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2174,7 +1849,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2272,7 +1948,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2308,139 +1985,28 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "cohere": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "X-Client-Name": ""
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ]
-                            }
-                        }
-                    }
-                ],
-                "max_tokens": 1024
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Cohere V2 cannot render an explicit tool choice."
         },
         "tools_and_schema_streamed": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "X-Client-Name": ""
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": true,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ]
-                            }
-                        }
-                    }
-                ],
-                "max_tokens": 1024
-            },
-            "method": "POST",
-            "options": {
-                "stream": true
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Cohere V2 cannot render an explicit tool choice."
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2494,7 +2060,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2527,7 +2094,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2559,147 +2127,26 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "X-Client-Name": ""
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ]
-                            }
-                        }
-                    }
-                ],
-                "max_tokens": 1024
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Cohere V2 cannot render an explicit tool choice."
         },
         "conversation": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "X-Client-Name": ""
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": "What is in this image?"
-                            },
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": "https://example.test/cat.png"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "role": "user",
-                        "content": "And what is the weather in NYC?"
-                    },
-                    {
-                        "role": "assistant",
-                        "tool_calls": [
-                            {
-                                "id": "call_1",
-                                "type": "function",
-                                "function": {
-                                    "name": "get_weather",
-                                    "arguments": "{\"city\":\"NYC\"}"
-                                }
-                            },
-                            {
-                                "id": "call_2",
-                                "type": "function",
-                                "function": {
-                                    "name": "get_weather",
-                                    "arguments": "{\"city\":\"Boston\"}"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "role": "tool",
-                        "tool_call_id": "call_1",
-                        "content": "{\"temp\":21}"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "enable_thinking": true,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ]
-                            }
-                        }
-                    }
-                ],
-                "max_tokens": 1024
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Cohere V2 cannot render an explicit tool choice."
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2735,178 +2182,37 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "deepseek": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "DeepSeek cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "tools_and_schema_streamed": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": true,
-                "stream_options": {
-                    "include_usage": true
-                },
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": true
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "DeepSeek cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "schema_only": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "response_format": {
-                    "type": "json_object"
-                }
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "DeepSeek cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2939,7 +2245,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -2971,7 +2278,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3022,7 +2330,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3120,7 +2429,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3156,42 +2466,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "fireworks": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -3214,6 +2493,31 @@
                 "temperature": 0,
                 "stream": false,
                 "max_completion_tokens": 1024,
+                "response_format": {
+                    "type": "json_object",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "text": {
+                                "type": "string"
+                            },
+                            "score": {
+                                "type": "integer"
+                            },
+                            "tags": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "text"
+                        ],
+                        "additionalProperties": false,
+                        "nullable": false
+                    }
+                },
                 "tools": [
                     {
                         "type": "function",
@@ -3241,7 +2545,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3267,6 +2572,31 @@
                 "max_completion_tokens": 1024,
                 "stream_options": {
                     "include_usage": true
+                },
+                "response_format": {
+                    "type": "json_object",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "text": {
+                                "type": "string"
+                            },
+                            "score": {
+                                "type": "integer"
+                            },
+                            "tags": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "text"
+                        ],
+                        "additionalProperties": false,
+                        "nullable": false
+                    }
                 },
                 "tools": [
                     {
@@ -3295,7 +2625,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3349,7 +2680,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3382,7 +2714,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3414,7 +2747,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3465,7 +2799,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3563,7 +2898,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3599,42 +2935,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "gemini": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -3660,6 +2965,28 @@
                     }
                 ],
                 "generationConfig": {
+                    "responseMimeType": "application/json",
+                    "responseSchema": {
+                        "type": "object",
+                        "properties": {
+                            "text": {
+                                "type": "string"
+                            },
+                            "score": {
+                                "type": "integer"
+                            },
+                            "tags": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "text"
+                        ],
+                        "nullable": false
+                    },
                     "maxOutputTokens": 1024,
                     "temperature": 0
                 },
@@ -3684,7 +3011,7 @@
                 },
                 "tool_config": {
                     "function_calling_config": {
-                        "mode": "ANY"
+                        "mode": "AUTO"
                     }
                 }
             },
@@ -3692,7 +3019,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions?alt=sse",
@@ -3719,6 +3047,28 @@
                     }
                 ],
                 "generationConfig": {
+                    "responseMimeType": "application/json",
+                    "responseSchema": {
+                        "type": "object",
+                        "properties": {
+                            "text": {
+                                "type": "string"
+                            },
+                            "score": {
+                                "type": "integer"
+                            },
+                            "tags": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "text"
+                        ],
+                        "nullable": false
+                    },
                     "maxOutputTokens": 1024,
                     "temperature": 0
                 },
@@ -3743,7 +3093,7 @@
                 },
                 "tool_config": {
                     "function_calling_config": {
-                        "mode": "ANY"
+                        "mode": "AUTO"
                     }
                 }
             },
@@ -3751,7 +3101,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3808,7 +3159,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3844,7 +3196,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3880,7 +3233,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -3907,6 +3261,7 @@
                     }
                 ],
                 "generationConfig": {
+                    "responseMimeType": "text/plain",
                     "maxOutputTokens": 1024,
                     "temperature": 0
                 },
@@ -3939,7 +3294,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4015,6 +3371,7 @@
                     }
                 ],
                 "generationConfig": {
+                    "responseMimeType": "text/plain",
                     "maxOutputTokens": 1024,
                     "temperature": 0
                 },
@@ -4050,7 +3407,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4093,178 +3451,37 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "gemini-oai": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Gemini OpenAI-compatible API cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "tools_and_schema_streamed": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": true,
-                "max_completion_tokens": 1024,
-                "stream_options": {
-                    "include_usage": true
-                },
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": true
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Gemini OpenAI-compatible API cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "schema_only": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "response_format": {
-                    "type": "json_object"
-                }
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Gemini OpenAI-compatible API cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4297,7 +3514,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4329,7 +3547,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4380,7 +3599,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4478,7 +3698,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4514,42 +3735,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "glm": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -4572,6 +3762,35 @@
                 "temperature": 0,
                 "stream": false,
                 "max_completion_tokens": 1024,
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
+                },
                 "tools": [
                     {
                         "type": "function",
@@ -4599,7 +3818,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4625,6 +3845,35 @@
                 "max_completion_tokens": 1024,
                 "stream_options": {
                     "include_usage": true
+                },
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
                 },
                 "tools": [
                     {
@@ -4654,7 +3903,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4712,7 +3962,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4745,7 +3996,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4777,7 +4029,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4828,7 +4081,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4926,7 +4180,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -4962,42 +4217,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "groq": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -5020,6 +4244,35 @@
                 "temperature": 0,
                 "stream": false,
                 "max_completion_tokens": 1024,
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
+                },
                 "tools": [
                     {
                         "type": "function",
@@ -5047,7 +4300,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5073,6 +4327,35 @@
                 "max_completion_tokens": 1024,
                 "stream_options": {
                     "include_usage": true
+                },
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
                 },
                 "tools": [
                     {
@@ -5101,7 +4384,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5159,7 +4443,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5192,7 +4477,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5224,7 +4510,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5275,7 +4562,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5373,7 +4661,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5409,42 +4698,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "huggingface": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -5467,6 +4725,35 @@
                 "temperature": 0,
                 "stream": false,
                 "max_completion_tokens": 1024,
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
+                },
                 "tools": [
                     {
                         "type": "function",
@@ -5494,7 +4781,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5520,6 +4808,35 @@
                 "max_completion_tokens": 1024,
                 "stream_options": {
                     "include_usage": true
+                },
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
                 },
                 "tools": [
                     {
@@ -5548,7 +4865,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5574,27 +4892,31 @@
                 "max_completion_tokens": 1024,
                 "response_format": {
                     "type": "json_schema",
-                    "value": {
-                        "type": "object",
-                        "properties": {
-                            "text": {
-                                "type": "string"
-                            },
-                            "score": {
-                                "type": "integer"
-                            },
-                            "tags": {
-                                "type": "array",
-                                "items": {
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
                                     "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 }
-                            }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
                         },
-                        "required": [
-                            "text"
-                        ],
-                        "additionalProperties": false,
-                        "nullable": false
+                        "strict": true
                     }
                 }
             },
@@ -5602,7 +4924,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5635,7 +4958,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5667,7 +4991,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5718,7 +5043,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5816,7 +5142,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -5852,42 +5179,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "inception": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -5966,7 +5262,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6049,7 +5346,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6107,7 +5405,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6140,7 +5439,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6172,7 +5472,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6223,7 +5524,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6321,7 +5623,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6357,42 +5660,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "meta": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -6471,7 +5743,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6554,7 +5827,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6612,7 +5886,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6650,7 +5925,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6682,7 +5958,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6733,7 +6010,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6831,7 +6109,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -6867,257 +6146,37 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "minimaxi": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "response_format": {
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "answer",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "text": {
-                                    "type": "string"
-                                },
-                                "score": {
-                                    "type": "number"
-                                },
-                                "tags": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "required": [
-                                "text"
-                            ],
-                            "additionalProperties": false,
-                            "nullable": false
-                        }
-                    }
-                },
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ]
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "MiniMax cannot render integer schema types without changing them to number."
         },
         "tools_and_schema_streamed": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": true,
-                "max_completion_tokens": 1024,
-                "stream_options": {
-                    "include_usage": true
-                },
-                "response_format": {
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "answer",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "text": {
-                                    "type": "string"
-                                },
-                                "score": {
-                                    "type": "number"
-                                },
-                                "tags": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "required": [
-                                "text"
-                            ],
-                            "additionalProperties": false,
-                            "nullable": false
-                        }
-                    }
-                },
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ]
-            },
-            "method": "POST",
-            "options": {
-                "stream": true
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "MiniMax cannot render integer schema types without changing them to number."
         },
         "schema_only": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "response_format": {
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "answer",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "text": {
-                                    "type": "string"
-                                },
-                                "score": {
-                                    "type": "number"
-                                },
-                                "tags": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "required": [
-                                "text"
-                            ],
-                            "additionalProperties": false,
-                            "nullable": false
-                        }
-                    }
-                }
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "MiniMax cannot render integer schema types without changing them to number."
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -7154,7 +6213,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -7186,149 +6246,26 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ]
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "MiniMax cannot render an explicit tool choice."
         },
         "conversation": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": "What is in this image?"
-                            },
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": "https://example.test/cat.png"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "role": "user",
-                        "content": "And what is the weather in NYC?"
-                    },
-                    {
-                        "role": "assistant",
-                        "tool_calls": [
-                            {
-                                "id": "call_1",
-                                "type": "function",
-                                "function": {
-                                    "name": "get_weather",
-                                    "arguments": "{\"city\":\"NYC\"}"
-                                }
-                            },
-                            {
-                                "id": "call_2",
-                                "type": "function",
-                                "function": {
-                                    "name": "get_weather",
-                                    "arguments": "{\"city\":\"Boston\"}"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "role": "tool",
-                        "tool_call_id": "call_1",
-                        "content": "{\"temp\":21}"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "enable_thinking": true,
-                "max_completion_tokens": 1024,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ]
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "MiniMax cannot render an explicit tool choice."
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -7364,42 +6301,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "mistral": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -7422,6 +6328,35 @@
                 ],
                 "temperature": 0,
                 "stream": false,
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
+                },
                 "tools": [
                     {
                         "type": "function",
@@ -7449,7 +6384,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -7473,6 +6409,35 @@
                 ],
                 "temperature": 0,
                 "stream": true,
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
+                },
                 "tools": [
                     {
                         "type": "function",
@@ -7500,7 +6465,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -7558,7 +6524,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -7591,7 +6558,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -7623,7 +6591,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -7674,7 +6643,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -7772,7 +6742,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -7808,42 +6779,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "moonshot": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -7922,7 +6862,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8005,7 +6946,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8063,7 +7005,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8096,7 +7039,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8128,7 +7072,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8179,7 +7124,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8277,7 +7223,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8313,42 +7260,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "ollama": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -8427,7 +7343,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8510,7 +7427,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8568,7 +7486,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8601,7 +7520,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8633,7 +7553,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8684,7 +7605,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8782,7 +7704,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -8818,42 +7741,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "openai": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -8932,7 +7824,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9015,7 +7908,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9073,7 +7967,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9106,7 +8001,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9138,7 +8034,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9189,7 +8086,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9287,7 +8185,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9323,42 +8222,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "openai-compatible": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -9437,7 +8305,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9520,7 +8389,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9578,7 +8448,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9611,7 +8482,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9643,7 +8515,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9694,7 +8567,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9792,7 +8666,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -9828,42 +8703,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "openai-responses": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -9947,7 +8791,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10032,7 +8877,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10095,7 +8941,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10133,7 +8980,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10170,7 +9018,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10224,7 +9073,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10317,7 +9167,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10356,42 +9207,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "openresponses": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -10475,7 +9295,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10560,7 +9381,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10623,7 +9445,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10661,7 +9484,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10698,7 +9522,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10752,7 +9577,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10845,7 +9671,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10884,42 +9711,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "openrouter": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -10942,6 +9738,35 @@
                 "temperature": 0,
                 "stream": false,
                 "max_completion_tokens": 1024,
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
+                },
                 "tools": [
                     {
                         "type": "function",
@@ -10969,7 +9794,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -10995,6 +9821,35 @@
                 "max_completion_tokens": 1024,
                 "stream_options": {
                     "include_usage": true
+                },
+                "response_format": {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
                 },
                 "tools": [
                     {
@@ -11023,7 +9878,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11081,7 +9937,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11114,7 +9971,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11146,7 +10004,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11197,7 +10056,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11295,7 +10155,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11331,153 +10192,28 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "perplexity": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": false,
-                "toolChoice": false,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": false,
-                "toolChoice": false,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": false,
-                "toolChoice": false,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "response_format": {
-                    "type": "json_schema",
-                    "json_schema": {
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "text": {
-                                    "type": "string"
-                                },
-                                "score": {
-                                    "type": "integer"
-                                },
-                                "tags": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "required": [
-                                "text"
-                            ],
-                            "additionalProperties": false,
-                            "nullable": false
-                        }
-                    }
-                }
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Perplexity cannot render tool definitions or tool choice."
         },
         "tools_and_schema_streamed": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": true,
-                "response_format": {
-                    "type": "json_schema",
-                    "json_schema": {
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "text": {
-                                    "type": "string"
-                                },
-                                "score": {
-                                    "type": "integer"
-                                },
-                                "tags": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "required": [
-                                "text"
-                            ],
-                            "additionalProperties": false,
-                            "nullable": false
-                        }
-                    }
-                }
-            },
-            "method": "POST",
-            "options": {
-                "stream": true
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Perplexity cannot render tool definitions or tool choice."
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11533,7 +10269,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11569,7 +10306,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11601,107 +10339,26 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Perplexity cannot render tool definitions or tool choice."
         },
         "conversation": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "max_tokens": 1024,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": "What is in this image?"
-                            },
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": "https://example.test/cat.png"
-                                }
-                            },
-                            {
-                                "type": "text",
-                                "text": "And what is the weather in NYC?"
-                            }
-                        ]
-                    },
-                    {
-                        "role": "assistant",
-                        "tool_calls": [
-                            {
-                                "id": "call_1",
-                                "type": "function",
-                                "function": {
-                                    "name": "get_weather",
-                                    "arguments": "{\"city\":\"NYC\"}"
-                                }
-                            },
-                            {
-                                "id": "call_2",
-                                "type": "function",
-                                "function": {
-                                    "name": "get_weather",
-                                    "arguments": "{\"city\":\"Boston\"}"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "role": "tool",
-                        "tool_call_id": "call_1",
-                        "content": "{\"temp\":21}"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "enable_thinking": true
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Perplexity cannot render tool definitions or tool choice."
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11737,146 +10394,28 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "qwen": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Qwen cannot render a non-text response format together with tools."
         },
         "tools_and_schema_streamed": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": true,
-                "max_completion_tokens": 1024,
-                "stream_options": {
-                    "include_usage": true
-                },
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": true
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Qwen cannot render a non-text response format together with tools."
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11901,14 +10440,41 @@
                 "stream": false,
                 "max_completion_tokens": 1024,
                 "response_format": {
-                    "type": "json_object"
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "answer",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "integer"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "text"
+                            ],
+                            "additionalProperties": false,
+                            "nullable": false
+                        },
+                        "strict": true
+                    }
                 }
             },
             "method": "POST",
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11941,7 +10507,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -11973,151 +10540,26 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Qwen cannot render required tool choice; use auto, none, or a specific tool."
         },
         "conversation": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": "What is in this image?"
-                            },
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": "https://example.test/cat.png"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "role": "user",
-                        "content": "And what is the weather in NYC?"
-                    },
-                    {
-                        "role": "assistant",
-                        "tool_calls": [
-                            {
-                                "id": "call_1",
-                                "type": "function",
-                                "function": {
-                                    "name": "get_weather",
-                                    "arguments": "{\"city\":\"NYC\"}"
-                                }
-                            },
-                            {
-                                "id": "call_2",
-                                "type": "function",
-                                "function": {
-                                    "name": "get_weather",
-                                    "arguments": "{\"city\":\"Boston\"}"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "role": "tool",
-                        "tool_call_id": "call_1",
-                        "content": "{\"temp\":21}"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "enable_thinking": true,
-                "max_completion_tokens": 1024,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "Qwen cannot render a specific tool choice while thinking is enabled."
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12153,178 +10595,37 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "sambanova": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": false,
-                "formatWithTools": false,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "SambaNova cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "tools_and_schema_streamed": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": true,
-                "max_completion_tokens": 1024,
-                "stream_options": {
-                    "include_usage": true
-                },
-                "tools": [
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "get_weather",
-                            "description": "Get the weather",
-                            "parameters": {
-                                "type": "object",
-                                "properties": {
-                                    "city": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "city"
-                                ],
-                                "additionalProperties": false
-                            }
-                        }
-                    }
-                ],
-                "tool_choice": "auto"
-            },
-            "method": "POST",
-            "options": {
-                "stream": true
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "SambaNova cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "schema_only": {
-            "url": "https://api.example.test/v1/chat/completions",
-            "headers": {
-                "Authorization": "Bearer test-api-key",
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json"
-            },
-            "body": {
-                "model": "test-model",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are terse."
-                    },
-                    {
-                        "role": "user",
-                        "content": "Say hi"
-                    }
-                ],
-                "temperature": 0,
-                "stream": false,
-                "max_completion_tokens": 1024,
-                "response_format": {
-                    "type": "json_object"
-                }
-            },
-            "method": "POST",
-            "options": {
-                "stream": false
-            },
-            "telemetry": null
+            "url": "NO REQUEST SENT",
+            "headers": [],
+            "body": null,
+            "method": null,
+            "options": [],
+            "telemetry": null,
+            "error": "SambaNova cannot render JSON Schema; request JSON Object explicitly or enable an evidenced lossy fallback before rendering."
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12357,7 +10658,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12389,7 +10691,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12440,7 +10743,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12538,7 +10842,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12574,42 +10879,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "together": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -12688,7 +10962,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12771,7 +11046,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12829,7 +11105,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12862,7 +11139,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12894,7 +11172,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -12945,7 +11224,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -13043,7 +11323,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -13079,42 +11360,11 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     },
     "xai": {
-        "capabilities": {
-            "default": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "test-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            },
-            "reasoner-model": {
-                "streaming": true,
-                "toolCalling": true,
-                "toolChoice": true,
-                "jsonObject": true,
-                "jsonSchema": true,
-                "formatWithTools": true,
-                "maxContextTokens": null,
-                "maxOutputTokens": null
-            }
-        },
         "tools_and_schema": {
             "url": "https://api.example.test/v1/chat/completions",
             "headers": {
@@ -13193,7 +11443,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "tools_and_schema_streamed": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -13276,7 +11527,8 @@
             "options": {
                 "stream": true
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "schema_only": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -13334,7 +11586,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "json_object": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -13367,7 +11620,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "text_format": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -13399,7 +11653,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "required_choice": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -13450,7 +11705,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "conversation": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -13549,7 +11805,8 @@
             "options": {
                 "stream": false
             },
-            "telemetry": null
+            "telemetry": null,
+            "error": null
         },
         "telemetry_correlated": {
             "url": "https://api.example.test/v1/chat/completions",
@@ -13585,7 +11842,8 @@
                 "user_id": "golden-user",
                 "conversation_id": "golden-conversation",
                 "request_id": "golden-request"
-            }
+            },
+            "error": null
         }
     }
 }
