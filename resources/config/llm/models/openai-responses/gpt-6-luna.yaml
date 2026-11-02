@@ -2,10 +2,10 @@ schemaVersion: 1
 version: '2026-09-11'
 profile:
   driver: openai-responses
-  model: gpt-5.4-mini
+  model: gpt-6-luna
   status: supported
   limits:
-    contextWindow: 400000
+    contextWindow: 1050000
     maxOutput: 128000
   modalities:
     inputText: supported
@@ -19,4 +19,21 @@ profile:
     jsonObject: supported
     jsonSchema: supported
     responseFormatWithTools: supported
+    toolsWithReasoning: supported
+    reasoning:
+      selections:
+        - disabled
+        - effort
+      efforts:
+        - requested: low
+          provider: low
+        - requested: medium
+          provider: medium
+        - requested: high
+          provider: high
+        - requested: xhigh
+          provider: xhigh
+        - requested: max
+          provider: max
+      default: enabled
   source: upstream-reviewed
